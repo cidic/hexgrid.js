@@ -1,0 +1,48 @@
+	body {
+			background-color: #cccccc;
+		}
+		a.button { padding:8px; border:2px solid black; background:silver; color:blue; text-decoration:none; margin:16px; }
+		a.button:hover { border:2px solid red; background:yellow; color:red; }
+		div { font-family:arial; }
+		div.container {
+			position:relative;
+			margin: 20px auto;
+		}
+		div.map {
+			margin: 0 auto;
+			position:absolute;
+			z-index: 10;
+		}
+		.canvas {
+			margin: 0 auto;
+			position: absolute;
+			z-index:100;
+			border: 1px solid #808080;
+			
+		}
+		div.hex-wrap {}
+		div.hex {
+			width: 30px;
+      		height: 26px;
+      		font-size:8px;
+		}
+		div.yellow {
+			background: url("../images/hex_yellow.png") top left no-repeat;
+	    }
+		div.green {
+			background: url("../images/hex_green.png") top left no-repeat;
+	    }
+		div.white {
+			background: url("../images/hex_white.png") top left no-repeat;
+	    }
+		div.blue {
+			background: url("../images/hex_blue.png") top left no-repeat;
+	    }
+		div.hex_tree {
+			position:relative;
+			background: url("../images/hex_tree.png") top left no-repeat;
+	    	width: 30px;
+      		height: 30px;
+      		top:-10px;
+      		font-size:8px;
+		}
