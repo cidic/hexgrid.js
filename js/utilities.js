@@ -41,45 +41,104 @@ function distance_test(hex_a,hex_b){
 	console.log('dist_test2 : '+dist2);
 }
 
-$(function() {
-	$('#btn_array_space').bind('click', function(e) {
-		e.preventDefault();
-		var input = $('#array_space').val(),
-			input_data = input.split(','),
-			x = Number(input_data[0]),
-			y = Number(input_data[1]),
-			result = array_to_hex([x,y]).join(',');
-			
-			console.log('result : '+result);
-			$('#info').html(result);					
-		
-	});
-	$('#btn_hex_space').bind('click', function(e) {
-		e.preventDefault();
-		var input = $('#hex_space').val(),
-			input_data = input.split(','),
-			x = Number(input_data[0]),
-			y = Number(input_data[1]),
-			
-			result = hex_to_array([x,y]).join(',');
-			
-			console.log('result : '+result);
-			$('#info').html(result);					
-		
-	});
-	
-	$('.hex-wrap').live('click', function(){
-		$(this).children().toggleClass('blue');//.attr('class', 'hex blue');
-	});
-	
-	$('#btn_toggle_canvas').click(function(){
-		$('#canvas').toggle();
-		return false;
-	});
 
-});
+    
+    function draw_arc(x1,y1,x2,y2,x3,y3) {
+        var extended_line1 = get_extended_line_coord(x1,y1,x2,y2),
+            extended_line2 = get_extended_line_coord(x1,y1,x3,y3);
+        
+        x2 = extended_line1.x;
+        y2 = extended_line1.y;
+        
+        x3 = extended_line2.x;
+        y3 = extended_line2.y;
+        
+        draw_triangle(x1,y1,x2,y2,x3,y3);
+            
+    }
+    function draw_triangle(x1,y1,x2,y2,x3,y3) {
+        
+        var canvas = document.getElementById('canvas');
+		if (canvas.getContext){
+	        var ctx = canvas.getContext('2d');
+	
+        ctx.fillStyle = "rgba(200,100,100,0.1)";
+        ctx.strokeStyle = "rgba(200,50,50,0.9)";
+        ctx.globalAlpha = 1.0;
+		ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.lineTo(x3, y3);
+        ctx.lineTo(x1, y1);
+		ctx.closePath();
+        ctx.stroke();
+		ctx.fill();
+    
+	
+    
+		}
+    }
+function get_extended_line_coord(x1,y1,x2,y2) {
+    var slope = (y2 - y1) / (x2 - x1),
+	    yintercept = y1 - slope * x1,
+        xr = (x2 > x1) ? con_width : 0 ,
+        yr = slope * xr + yintercept;
+        
+        return {
+            x: xr,
+            y: yr
+        };
+}
+function draw_extend_line(x1,y1,x2,y2, color) {
+	//extends line to edge of canvas
+	//draw_line(x1,y1,x2,y2, 'red', 5);
+	var canvas = document.getElementById('canvas');
+		if (canvas.getContext){
+		    var ctx = canvas.getContext('2d');
+	/*	ctx.fillStyle = 'black';
+    
+		ctx.beginPath();
+		ctx.arc(x1,y1,5,0,Math.PI*2,true);
+		ctx.closePath();
+		ctx.fill();
+*/
+	
+	
+	}
+		
+		var x = x2 - x1,
+			y = y2 - y1,
+		
+		distance = Math.sqrt(x * x + y * y),
+		radian = Math.atan2(y, x),
+		degree = radian * 180 / Math.PI, //confirmed correct
+		slope = (y2 - y1) / (x2 - x1),
+		yintercept = y1 - slope * x1,
+		
+		
+		//convert back to cartesian coords
+		_x = x1 + distance * Math.cos(radian),
+		_y = y1 + distance * Math.sin(radian);		
+		
+		console.log('slope : '+slope);
+		
+        var xr;
+        if(x2 > x1){
+            xr = con_width;   
+        }
+        else {
+            xr = 0;   
+        }
+        yr = slope * xr + yintercept;
+         
+        draw_line(x1,y1,xr,yr, color);
+
+		
+
+		
+}
 function math_stuff(){
-	var x1 = 75,
+    var x1 = 75,
 		y1 = 75,
 		
 		x2 = 120,
@@ -136,101 +195,6 @@ function math_stuff(){
 				console.log('_y : '+ _y);
 
 	}
-    
-    function draw_arc(x1,y1,x2,y2,x3,y3) {
-        var extended_line1 = get_extended_line_coord(x1,y1,x2,y2),
-            extended_line2 = get_extended_line_coord(x1,y1,x3,y3);
-        
-        x2 = extended_line1.x;
-        y2 = extended_line1.y;
-        
-        x3 = extended_line2.x;
-        y3 = extended_line2.y;
-        
-        draw_triangle(x1,y1,x2,y2,x3,y3);
-            
-    }
-    function draw_triangle(x1,y1,x2,y2,x3,y3) {
-        
-        var canvas = document.getElementById('canvas');
-		if (canvas.getContext){
-	        var ctx = canvas.getContext('2d');
-	
-        ctx.fillStyle = "rgba(200,200,200,0.3)";
-        ctx.globalAlpha = 1.0;
-		ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.lineTo(x3, y3);
-        ctx.lineTo(x1, y1);
-		ctx.closePath();
-        ctx.stroke();
-		ctx.fill();
-    
-	
-    
-		}
-    }
-function get_extended_line_coord(x1,y1,x2,y2) {
-    var slope = (y2 - y1) / (x2 - x1),
-	    yintercept = y1 - slope * x1,
-        xr = (x2 > x1) ? con_width : 0 ,
-        yr = slope * xr + yintercept;
-        
-        return {
-            x: xr,
-            y: yr
-        }
-}
-function draw_extend_line(x1,y1,x2,y2, color) {
-	//extends line to edge of canvas
-	//draw_line(x1,y1,x2,y2, 'red', 5);
-	var canvas = document.getElementById('canvas');
-		if (canvas.getContext){
-		    var ctx = canvas.getContext('2d');
-	/*	ctx.fillStyle = 'black';
-    
-		ctx.beginPath();
-		ctx.arc(x1,y1,5,0,Math.PI*2,true);
-		ctx.closePath();
-		ctx.fill();
-*/
-	
-	
-	}
-		
-		var x = x2 - x1,
-			y = y2 - y1,
-		
-		distance = Math.sqrt(x * x + y * y),
-		radian = Math.atan2(y, x),
-		degree = radian * 180 / Math.PI, //confirmed correct
-		slope = (y2 - y1) / (x2 - x1),
-		yintercept = y1 - slope * x1,
-		
-		
-		//convert back to cartesian coords
-		_x = x1 + distance * Math.cos(radian),
-		_y = y1 + distance * Math.sin(radian);		
-		
-		console.log('slope : '+slope);
-		
-        var xr;
-        if(x2 > x1){
-            xr = con_width;   
-        }
-        else {
-            xr = 0;   
-        }
-        yr = slope * xr + yintercept;
-         
-        draw_line(x1,y1,xr,yr, color);
-
-		
-
-		
-}
-
     function extend_line2(){
 		
 		
@@ -239,3 +203,40 @@ function draw_extend_line(x1,y1,x2,y2, color) {
 		// you want to calcuate out four values, t1 = (x1 - x_a)/(x_b-x_a), t2 = (x2-x_a)/(x_b-x_a), t3 = (y1 - y_a)/(y_b-y_a), t4 = (y2-y_a)/(y_b-y_a) -- the t that corresponds to the first time it hits a boundary line is the smallest non-negtive t. It is one of thouse four, once you have that your point is just ( (1-t)x_a + x_b, (1-t)y_a+y_b)
 
 	}
+    $(function() {
+    $('#btn_array_space').bind('click', function(e) {
+		e.preventDefault();
+		var input = $('#array_space').val(),
+			input_data = input.split(','),
+			x = Number(input_data[0]),
+			y = Number(input_data[1]),
+			result = array_to_hex([x,y]).join(',');
+			
+			console.log('result : '+result);
+			$('#info').html(result);					
+		
+	});
+	$('#btn_hex_space').bind('click', function(e) {
+		e.preventDefault();
+		var input = $('#hex_space').val(),
+			input_data = input.split(','),
+			x = Number(input_data[0]),
+			y = Number(input_data[1]),
+			
+			result = hex_to_array([x,y]).join(',');
+			
+			console.log('result : '+result);
+			$('#info').html(result);					
+		
+	});
+	
+	$('.hex-wrap').live('click', function(){
+		$(this).children().toggleClass('blue');//.attr('class', 'hex blue');
+	});
+	
+	$('#btn_toggle_canvas').click(function(){
+		$('#canvas').toggle();
+		return false;
+	});
+
+});
