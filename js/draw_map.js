@@ -29,7 +29,7 @@
 			};
 		}
 	}
-	mapArray[4][6].color = 'yellow';
+	mapArray[4][5].color = 'yellow';
 	
 
 	mapArray[2][6].blocks_los = true;

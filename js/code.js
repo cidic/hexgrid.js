@@ -296,6 +296,7 @@
 			// draw lines for testing purposes
          //   draw_extend_line(origin_hex.center_coord.x,origin_hex.center_coord.y,arc_groups.min.x,arc_groups.min.y, 'darkred');
 		//	draw_extend_line(origin_hex.center_coord.x,origin_hex.center_coord.y,arc_groups.max.x,arc_groups.max.y);
+        
             draw_arc(
                 origin_hex.center_coord.x,
                 origin_hex.center_coord.y,
@@ -323,10 +324,11 @@
 			if(blocks){ highlight_hex_obj(hex, 'white'); }
 			return blocks;
 		}
-		var origin_hex = mapArray[4][6],
+		var origin_hex = mapArray[4][5],
 			loop_radius = 2,
-			max_loop_radius = 3,
-			los_arc_groups = [];
+			max_loop_radius = 4,
+			los_arc_groups = [],
+            old_los_arc_groups = [];
 			
 		for(var r = loop_radius; r <= max_loop_radius; r++){
 		loop_radius = r;
@@ -337,6 +339,8 @@
 		
 		if(los_arc_groups.length > 0) {
 			// filter out hexes that are not within the los_arc_groups
+            
+            
 			for(var j = 0,len = los_arc_groups.length; j<len; j++){
 				for(var i = 0,len2 = loop_hexes.length; i<len2; i++) {
 					
@@ -347,20 +351,22 @@
 				}
 			}
 		}
+        console.log('los_arc_groups');
 		console.log(los_arc_groups);
-		console.log('hidden');
+		console.log('hidden_hexes');
 		console.log(hidden_hexes);
 		
 		var	blocking_hex_groups = get_los_blocking_hex_groups(loop_hexes, blocks_los); // array of los blocking hex groups, needs full hex loop
 			
+            // save last loop field of view data
+            old_los_arc_groups = los_arc_groups;
+            
 			// array of field of view arc data
 			los_arc_groups = get_los_arc_groups(origin_hex, blocking_hex_groups);
 			
-	//		var arc = los_arc_groups[0];
-		//	var test_func = hex_inside_arc_group(origin_hex, mapArray[2][4],arc);
-			// console.log('test_func');
-			// 			console.log(test_func);
-			
+            //merge new and old field of view data
+           // los_arc_groups = mergeRanges(old_los_arc_groups, los_arc_groups);
+            
 			hexes = []; // reset hexes
 		}		
 		
