@@ -116,6 +116,7 @@ function draw_extend_line(x1,y1,x2,y2, color) {
 		yintercept = y1 - slope * x1,
 		
 		
+        
 		//convert back to cartesian coords
 		_x = x1 + distance * Math.cos(radian),
 		_y = y1 + distance * Math.sin(radian);		
@@ -132,10 +133,6 @@ function draw_extend_line(x1,y1,x2,y2, color) {
         yr = slope * xr + yintercept;
          
         draw_line(x1,y1,xr,yr, color);
-
-		
-
-		
 }
 function math_stuff(){
     var x1 = 75,

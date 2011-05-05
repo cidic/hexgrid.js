@@ -1,5 +1,6 @@
 
     function get_adjacent(x,y){
+        // deprecated, only instance of this code
 		var node_x = 0,
 			node_y = 0,
 			result = [];
@@ -45,6 +46,7 @@
 			$target.attr('class', 'hex '+color);
 	}
 	
+    //depricated ?
 	function highlight_hex_obj(hex, color){
 		var color = color || 'blue';
 		var $target = $('#'+hex.x+'-'+hex.y+' div');
@@ -72,55 +74,75 @@
 	function get_hex_loop(hex, distance, func) {
 		// get array of hexes in loop around 'hex' 
 		var	distance = distance || 1,
-			origin_x = hex.array_space[0],
-			origin_y = hex.array_space[1],
+			origin_x = hex.x,
+			origin_y = hex.y,
 			next = mapArray[origin_x][origin_y - distance],
-			callback = (func && typeof(func) === "function")? true : false, // north hex
-			result = []; 
-							
+            result = [],
+            
+			funcIsValid = (func && typeof(func) === "function")? true : false,
+            
+            process = function(hex){
+                if(funcIsValid)
+                    func(hex);
+            },
+            
+            do_loop = function(hex, direction,  start_index) {
+            
+                var start_i = start_index || 0;
+            
+                for(var i = start_i; i < distance; i++){
+                    process(next);
+                    result.push(hex);
+                    next = get_hex_in_direction(next);
+                }
+                
+            
+            };
+                
+                			
 		// each arc passe picks up on the last value of 'next'
 		// trace north east arc
 		for(var i = 0; i < distance; i++){		
-			if(callback)
-				func(next);
-				result.push(next);
+			process(next);
+            result.push(next);
 			next = se_hex_obj(next);
 		}
 		// trace east arc
 		for(var i = 0; i < distance ; i++){
-			if(callback)
-				func(next);
-				result.push(next);
+		    process(next);
+			result.push(next);
 			next = s_hex_obj(next);
 		}
 		// trace south east arc
 		for(var i = 0; i < distance; i++){		
-			
-			if(callback)
-				func(next);	
-				result.push(next);			
+			process(next);
+            result.push(next);			
 			next = sw_hex_obj(next);
 		}
 		// trace south west arc
 		for(var i = 0; i < distance; i++){	
-			if(callback)
-				func(next);
-				result.push(next);
+			process(next);
+			result.push(next);
 			next = nw_hex_obj(next);
+            
+            if(next.edge && i < distance -1) {
+                
+            }
+            
 		}
 		// trace west arc
 		for(var i = 0; i < distance; i++){
-			if(callback)
-				func(next);
-				result.push(next);
+			process(next);
+            result.push(next);
 			next = n_hex_obj(next);	
+            
+
 		}
 		//trace north west arc
 		for(var i = 0; i < distance; i++){	
-			if(callback)
-				func(next);
-				result.push(next);
-			next = ne_hex_obj(next);	
+			process(next);
+			result.push(next);
+			next = ne_hex_obj(next);
 		}
 		return result;
 	}
@@ -129,18 +151,18 @@
 
 	
 	function turns(x0,y0,x1,y1,x2,y2) {
+        // deturmine if point(x2,y2) is LEFT, RIGHT, OR STRAIGHT (on top of) line (x0,y0)(x1,y1)
 	    cross = (x1-x0)*(y2-y0) - (x2-x0)*(y1-y0);
 	    return((cross>0.0) ? 'LEFT' : ((cross==0.0) ? 'STRAIGHT' : 'RIGHT'));
 	}
 	
 	function hex_intersects_line(hex, x0, y0, x1, y1) {
-		//hex = mapArray[x][y]
-		var side1 =turns(x0,y0,x1,y1,hex.corners[0][0],hex.corners[0][1]);
-			
+	    // deturmine if line(x0,y0)(x1,y1) croses hex
+		var side1 =turns(x0,y0,x1,y1,hex.corners[0].x,hex.corners[0].y);			
 		if (side1=='STRAIGHT') return true;
 		for (i=1;i<6;i++) {
-			var j = turns(x0, y0, x1, y1, hex.corners[i][0], hex.corners[i][1]);
-			
+			var j = turns(x0, y0, x1, y1, hex.corners[i].x, hex.corners[i].y);
+            // as soon as 2 points on opasite sides of the line are found, stop return true
 			if (j != side1) return true;
 		}
 		return false;
@@ -324,9 +346,9 @@
 			if(blocks){ highlight_hex_obj(hex, 'white'); }
 			return blocks;
 		}
-		var origin_hex = mapArray[4][5],
-			loop_radius = 2,
-			max_loop_radius = 4,
+		var origin_hex = mapArray[3][5],
+			loop_radius = 1,
+			max_loop_radius = 3,
 			los_arc_groups = [],
             old_los_arc_groups = [];
 			
@@ -351,11 +373,11 @@
 				}
 			}
 		}
-        console.log('los_arc_groups');
+      /*  console.log('los_arc_groups');
 		console.log(los_arc_groups);
 		console.log('hidden_hexes');
 		console.log(hidden_hexes);
-		
+	*/	
 		var	blocking_hex_groups = get_los_blocking_hex_groups(loop_hexes, blocks_los); // array of los blocking hex groups, needs full hex loop
 			
             // save last loop field of view data

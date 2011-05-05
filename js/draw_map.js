@@ -29,7 +29,7 @@
 			};
 		}
 	}
-	mapArray[4][5].color = 'yellow';
+	mapArray[3][5].color = 'yellow';
 	
 
 	mapArray[2][6].blocks_los = true;
@@ -50,6 +50,10 @@
 		con_width = hex_width * mapsize_y + (hex_height/2),
 		con_height = hex_height * mapsize_y + (hex_height/2) + 2;
 	
+    
+
+    
+    
 
 	function render_map() {
 		var	z_index = mapsize_x;
@@ -101,8 +105,8 @@
 				target_hex.arc_data = MultiDimensionalArray(mapsize_x,mapsize_y);
 				
 				var edge;
-				
-				if((0 < x < mapsize_x) && (0 < y < mapsize_y)){
+                
+				if((0 < x && x < mapsize_x) && (0 < y && y < mapsize_y)){
 					edge = null;
 				}
 				else if(x == 0 && y == 0){
@@ -129,7 +133,7 @@
 				else if(x == 0){
 					edge = 'left';
 				}
-				
+				    
 				target_hex.edge = edge;
 				
 				
