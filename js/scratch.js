@@ -40,3 +40,60 @@ function mergeRanges(ranges) {
 
 var result = mergeRanges(arr);
 console.log(result);
+
+function array_to_hex(hex){ return [(hex[1] - hex[0]), Math.floor((hex[0]+hex[1])/2)]; };
+    function hex_to_array(hex){ return [(hex[1] - Math.floor(hex[0]/2)), (hex[1] + Math.ceil(hex[0]/2))]; };
+
+    function highlight_hex_coord(x,y, color) {
+		 color = color || 'blue';
+		var $target = $('#'+x+'-'+y+' div');
+			$target.attr('class', 'hex '+color);
+	}
+	
+    //depricated ?
+	function highlight_hex_obj(hex, color){
+		var color = color || 'blue';
+		var $target = $('#'+hex.x+'-'+hex.y+' div');
+			$target.attr('class','hex '+color);
+	}
+    
+    
+    
+    function get_adjacent(x,y){
+        // deprecated, only instance of this code
+        var node_x = 0,
+    		node_y = 0,
+			result = [];
+		for(i=0;i<6;i++) {
+			// Run node update for 6 neighbouring tiles.
+			switch(i){
+				case 0: // north
+					node_x = x;
+					node_y = y+1;
+				break;
+				case 1: // south east
+					node_x = x+1;
+					node_y = ((x&1) == 0)? y : y+1;			
+				break;
+				case 2: //  north east
+					node_x = x+1;
+					node_y = ((x&1) == 0)? y-1 : y;							
+				break;
+				case 3: // south
+					node_x = x;
+					node_y = y-1;						
+				break;
+				case 4: // north west
+					node_x = x-1;
+					node_y = ((x&1) == 0)? y-1 : y;
+				break;
+				case 5: // south west
+					node_x = x-1;
+					node_y = ((x&1) == 0)? y : y+1;					
+				break;
+				
+			}
+			result[i] = [node_x,node_y]
+		}
+		return result;
+	}

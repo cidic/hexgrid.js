@@ -1,8 +1,6 @@
 // function found on developerfusion.com
     function MultiDimensionalArray(iRows,iCols) {
-    	var i;
-		var j;
-		var a = new Array(iRows);
+    	var i, j, a = new Array(iRows);
 		for (i=0; i < iRows; i++) {
 			a[i] = new Array(iCols);
 			for (j=0; j < iCols; j++) {

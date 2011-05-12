@@ -62,29 +62,29 @@
                         ,hexgrid : grid
                         ,color : 'green'
                         ,corners : [
-            				{ 	x : hex_x, 
-        						y : hex_y + (hex_height/2)
-        					},
-        					{	x : hex_x + hex_corner_offset,
-        						y : hex_y
-        					},
-        					{
-        						x : hex_x + hex_width - hex_corner_offset,
-        						y : hex_y
-        					},
-        					{
-        						x : hex_x + hex_width, 
-        						y : hex_y + (hex_height/2)
-        					},
-        					{
-        						x : hex_x + hex_width - hex_corner_offset,
-        						y : hex_y + hex_height
-        					},
-        					{
-        						x : hex_x + hex_corner_offset,
-        						y : hex_y + hex_height
-        					}
-        				]
+                            {   x : hex_x, 
+                                y : hex_y + (hex_height/2)
+                            },
+                            {	x : hex_x + hex_corner_offset,
+                                y : hex_y
+                            },
+                            {
+                                x : hex_x + hex_width - hex_corner_offset,
+                                y : hex_y
+                            },
+                            {
+                                x : hex_x + hex_width, 
+                                y : hex_y + (hex_height/2)
+                            },
+                            {
+                                x : hex_x + hex_width - hex_corner_offset,
+                                y : hex_y + hex_height
+                            },
+                            {
+                                x : hex_x + hex_corner_offset,
+                                y : hex_y + hex_height
+                            }
+                        ]
                         ,arc_data : MultiDimensionalArray(mapsize_x,mapsize_y)
                         ,edge : function(){
                         
@@ -119,14 +119,13 @@
                                     
                         }
                     }
-    			
                this.hexes[x][y] = new hex(hex_args);
 
 
-    			map_markup +='<div id="'+ x + '-' + y +'" class="hex-wrap hex array_space_'+x+'_'+y+'" style="position:absolute;z-index:'+ hex_y +';left:' + hex_x + 'px;top:' + ( hex_y) + 'px;">';
-    			map_markup +='<div class="hex green">';						
-    			map_markup +='<span style="position:absolute;left:10px;top:5px;">'+x+','+y+'</span>';
-    			map_markup +='</div></div>';
+                map_markup +='<div id="'+ x + '-' + y +'" class="hex-wrap hex array_space_'+x+'_'+y+'" style="position:absolute;z-index:'+ hex_y +';left:' + hex_x + 'px;top:' + ( hex_y) + 'px;">';
+                map_markup +='<div class="hex green">';						
+                map_markup +='<span style="position:absolute;left:10px;top:5px;">'+x+','+y+'</span>';
+                map_markup +='</div></div>';
 
                 z_index--;
 		    }
@@ -151,7 +150,7 @@
      ,hex_corner_offset : 8
     });
     grid.generateHexes();
-    
+    grid.hex(3,6).blocksLos = true;
     $(function(){
         $('#map').html(grid.markup);
     });

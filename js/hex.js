@@ -26,28 +26,24 @@
     hex.prototype.set_traversal_data = function() {
     // traversal data
         this.get_s_hex  = this.hexgrid.hex(this.x, this.y + 1);
-        this.get_ne_hex = this.hexgrid.hex(this.x +1, ((this.x&1) == 0)? this.y - 1 : this.y);
+        this.get_ne_hex = this.hexgrid.hex(this.x +1, ((this.x&1) === 0)? this.y - 1 : this.y);
         
-        this.get_nw_hex = this.hexgrid.hex(this.x - 1,((this.x&1) == 0)? this.y - 1 : this.y);
+        this.get_nw_hex = this.hexgrid.hex(this.x - 1,((this.x&1) === 0)? this.y - 1 : this.y);
         this.get_n_hex  = this.hexgrid.hex(this.x, this.y - 1 );
-        this.get_se_hex = this.hexgrid.hex(this.x + 1, ((this.x&1) == 0)? this.y : this.y + 1);
-        this.get_sw_hex = this.hexgrid.hex(this.x - 1, ((this.x&1) == 0)? this.y : this.y + 1);
+        this.get_se_hex = this.hexgrid.hex(this.x + 1, ((this.x&1) === 0)? this.y : this.y + 1);
+        this.get_sw_hex = this.hexgrid.hex(this.x - 1, ((this.x&1) === 0)? this.y : this.y + 1);
 	
     
     
    
-        this.get_adjacent = function(){
-            var arr =  [
+        this.get_adjacent = [
              this.get_s_hex
             ,this.get_ne_hex
             ,this.get_nw_hex
             ,this.get_n_hex
             ,this.get_se_hex
             ,this.get_sw_hex
-            ];
-            
-            arr = arr.filter(function(val) { return val !== null; });
-        };
+            ].filter(function(val) { return val !== null; });
            
             
       
@@ -63,7 +59,7 @@
 		// minRadianCorner
 		// maxRadianCorner
 		for(var i_x = 0, len = mapsize_x; i_x < len; i_x++){
-			for(var i_y = 0, len = mapsize_y; i_y < len; i_y++){
+			for(var i_y = 0, len2 = mapsize_y; i_y < len2; i_y++){
 				this.arc_data[i_x][i_y] = get_min_max_hex_corners(this, this.hexgrid.hex(i_x,i_y), false);
                
 			}	
@@ -72,8 +68,8 @@
 	}
     
      
-    hex.prototype.set_color = function(color){
-    	var color = color || 'blue',
+    hex.prototype.setColor = function(color){
+        var color = color || 'blue',
 		    $target = $('#'+hex.x+'-'+hex.y+' div');
         this.color = color;
 		$target.attr('class','hex '+color);

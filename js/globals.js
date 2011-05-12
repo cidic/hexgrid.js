@@ -15,7 +15,7 @@
         
         $('.container #map, .container')
 		    .width(con_width)
-	    	.height(con_height)
+            .height(con_height)
 		;
 		$('#canvas')
 			.attr('width', con_width)

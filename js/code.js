@@ -1,82 +1,15 @@
 
-    function get_adjacent(x,y){
-        // deprecated, only instance of this code
-    	var node_x = 0,
-			node_y = 0,
-			result = [];
-		for(i=0;i<6;i++) {
-			// Run node update for 6 neighbouring tiles.
-			switch(i){
-				case 0: // north
-					node_x = x;
-					node_y = y+1;
-				break;
-				case 1: // south east
-					node_x = x+1;
-					node_y = ((x&1) == 0)? y : y+1;			
-				break;
-				case 2: //  north east
-					node_x = x+1;
-					node_y = ((x&1) == 0)? y-1 : y;							
-				break;
-				case 3: // south
-					node_x = x;
-					node_y = y-1;						
-				break;
-				case 4: // north west
-					node_x = x-1;
-					node_y = ((x&1) == 0)? y-1 : y;
-				break;
-				case 5: // south west
-					node_x = x-1;
-					node_y = ((x&1) == 0)? y : y+1;					
-				break;
-				
-			}
-			result[i] = [node_x,node_y]
-		}
-		return result;
-	}
+	
+	
+
 
 	
-	
-	function highlight_hex_coord(x,y, color) {
-		 color = color || 'blue';
-		var $target = $('#'+x+'-'+y+' div');
-			$target.attr('class', 'hex '+color);
-	}
-	
-    //depricated ?
-	function highlight_hex_obj(hex, color){
-		var color = color || 'blue';
-		var $target = $('#'+hex.x+'-'+hex.y+' div');
-			$target.attr('class','hex '+color);
-	}
-	
-	function s_hex_coord(x,y){ return [x, y - 1]}
-	function ne_hex_coord(x,y){ return [x + 1, (x%2 == 0)? y - 1 : y] }
-	function nw_hex_coord(x,y){ return [x - 1, (x%2 == 0)? y - 1 : y] }
-	function n_hex_coord(x,y){ return [x, y + 1] }		
-	function se_hex_coord(x,y){ return [x + 1, (x%2 == 0)? y : y + 1] }
-	function sw_hex_coord(x,y){ return [x - 1, (x%2 == 0)? y : y + 1] }
-	
-	
-	function s_hex_obj(hex){ return mapArray[hex.x][ hex.y + 1] }
-	function ne_hex_obj(hex){ return mapArray[hex.x + 1][((hex.x&1) == 0)? hex.y - 1 : hex.y] }
-	function nw_hex_obj(hex){ return mapArray[hex.x - 1][((hex.x&1) == 0)? hex.y - 1 : hex.y] }
-	function n_hex_obj(hex){ return mapArray[hex.x][ hex.y - 1 ] }
-	function se_hex_obj(hex){ return mapArray[hex.x + 1][((hex.x&1) == 0)? hex.y : hex.y + 1] }
-	function sw_hex_obj(hex){ return mapArray[hex.x - 1][((hex.x&1) == 0)? hex.y : hex.y + 1] }
-
-	function array_to_hex(hex){ return [(hex[1] - hex[0]), Math.floor((hex[0]+hex[1])/2)]; };
-	function hex_to_array(hex){ return [(hex[1] - Math.floor(hex[0]/2)), (hex[1] + Math.ceil(hex[0]/2))]; };
-
 	function get_hex_loop(hex, distance, func) {
 		// get array of hexes in loop around 'hex' 
 		var	distance = distance || 1,
 			origin_x = hex.x,
 			origin_y = hex.y,
-			next = mapArray[origin_x][origin_y - distance],
+			next = grid.hex(origin_x, origin_y - distance),
             result = [],
             
 			funcIsValid = (func && typeof(func) === "function")? true : false,
@@ -95,8 +28,6 @@
                     result.push(hex);
                     next = get_hex_in_direction(next);
                 }
-                
-            
             };
                 
 
@@ -105,44 +36,38 @@
 		for(var i = 0; i < distance; i++){		
 			process(next);
             result.push(next);
-			next = se_hex_obj(next);
+			next = next.get_se_hex;
 		}
 		// trace east arc
 		for(var i = 0; i < distance ; i++){
 		    process(next);
 			result.push(next);
-			next = s_hex_obj(next);
+			next = next.get_s_hex;
 		}
 		// trace south east arc
 		for(var i = 0; i < distance; i++){		
 			process(next);
             result.push(next);			
-			next = sw_hex_obj(next);
+			next = next.get_sw_hex;
 		}
 		// trace south west arc
 		for(var i = 0; i < distance; i++){	
 			process(next);
 			result.push(next);
-			next = nw_hex_obj(next);
-            
-            if(next.edge && i < distance -1) {
-                
-            }
-            
+			next = next.get_nw_hex;            
 		}
 		// trace west arc
 		for(var i = 0; i < distance; i++){
 			process(next);
             result.push(next);
-			next = n_hex_obj(next);	
-            
+			next = next.get_n_hex;
 
 		}
 		//trace north west arc
 		for(var i = 0; i < distance; i++){	
 			process(next);
 			result.push(next);
-			next = ne_hex_obj(next);
+			next = next.get_ne_hex;
 		}
 		return result;
 	}
@@ -153,7 +78,7 @@
 	function turns(x0,y0,x1,y1,x2,y2) {
         // deturmine if point(x2,y2) is LEFT, RIGHT, OR STRAIGHT (on top of) line (x0,y0)(x1,y1)
 	    cross = (x1-x0)*(y2-y0) - (x2-x0)*(y1-y0);
-	    return((cross>0.0) ? 'LEFT' : ((cross==0.0) ? 'STRAIGHT' : 'RIGHT'));
+	    return((cross > 0.0) ? 'LEFT' : ((cross === 0.0) ? 'STRAIGHT' : 'RIGHT'));
 	}
 	
 	function hex_intersects_line(hex, x0, y0, x1, y1) {
@@ -281,7 +206,7 @@
 				last_value = currentValue;
 				
 			}
-	        	return array[index];
+                return array[index];
 			
 	    }, 0);
 	
@@ -320,7 +245,7 @@
 		//	draw_extend_line(origin_hex.center_coord.x,origin_hex.center_coord.y,arc_groups.max.x,arc_groups.max.y);
         
             draw_arc(
-                origin_hex.center_coord.x,
+                origin_hex.center.x,
                 origin_hex.center_coord.y,
                 arc_groups.min.x,
                 arc_groups.min.y,
@@ -342,11 +267,11 @@
 	function los_tester(){
 		
 		function blocks_los(hex){
-			var blocks = (hex.blocks_los)? true : false;
-			if(blocks){ highlight_hex_obj(hex, 'white'); }
+			var blocks = (hex.blocksLos)? true : false;
+			if(blocks){ hex.setColor('white'); }
 			return blocks;
 		}
-		var origin_hex = mapArray[3][5],
+		var origin_hex = grid.hex(3,5),
 			loop_radius = 1,
 			max_loop_radius = 3,
 			los_arc_groups = [],
@@ -430,7 +355,7 @@
 	$(function(){
 		
 	
-	//	los_tester();				
+		los_tester();				
 	//	line_test();
 		//highlight_hex_coord(4,5);
 	//	line_to_hex_test();
