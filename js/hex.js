@@ -33,7 +33,11 @@
         this.get_se_hex = this.hexgrid.hex(this.x + 1, ((this.x&1) == 0)? this.y : this.y + 1);
         this.get_sw_hex = this.hexgrid.hex(this.x - 1, ((this.x&1) == 0)? this.y : this.y + 1);
 	
-        this.get_adjacent = [
+    
+    
+   
+        this.get_adjacent = function(){
+            var arr =  [
              this.get_s_hex
             ,this.get_ne_hex
             ,this.get_nw_hex
@@ -41,10 +45,14 @@
             ,this.get_se_hex
             ,this.get_sw_hex
             ];
+            
+            arr = arr.filter(function(val) { return val !== null; });
+        };
+           
+            
       
     }
-    var testCount = 0;
-    hex.prototype.set_hex_data = function() {
+    hex.prototype.set_hex_arc_data = function() {
         
         
         // arc data	
@@ -57,7 +65,7 @@
 		for(var i_x = 0, len = mapsize_x; i_x < len; i_x++){
 			for(var i_y = 0, len = mapsize_y; i_y < len; i_y++){
 				this.arc_data[i_x][i_y] = get_min_max_hex_corners(this, this.hexgrid.hex(i_x,i_y), false);
-                testCount++;
+               
 			}	
 		}
 		

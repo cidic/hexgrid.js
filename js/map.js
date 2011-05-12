@@ -13,10 +13,9 @@
 		
         this.hex_corner_offset = args.hex_corner_offset;
 		this.map_pixel_height = hex_height * mapsize_y;
-		this.map_markup = '';
 		this.container_width = hex_width * mapsize_y + (hex_height/2);
 		this.container_height = hex_height * mapsize_y + (hex_height/2) + 2;
-        
+
         this.markup = '';
         this.hex = function (x,y){
             if(
@@ -36,9 +35,7 @@
     hexgrid.prototype.eachHex = function(func){
         for (var x=0; x < this.mapsize_x; x++) {
 			for (var y=0; y < this.mapsize_y; y++) { 
-     
-                func.apply(this.hexes[x][y],[x,y]);
-                //func(this.hexes[x][y]);              
+                func.apply(this.hexes[x][y],[x,y]);          
 			}
         }
     }
@@ -47,8 +44,8 @@
     hexgrid.prototype.generateHexes = function(){
         var map_markup = '',
             z_index = mapsize_y;
-        for (var x=0; x < this.mapsize_x; x++) {
-            for (var y=0; y < this.mapsize_y; y++) {
+        for (var x = 0; x < this.mapsize_x; x++) {
+            for (var y = 0; y < this.mapsize_y; y++) {
                 
          
                 var hex_x = (x * (this.hex_width - this.hex_corner_offset)),
@@ -92,33 +89,33 @@
                         ,edge : function(){
                         
                             
-                			if((0 < x && x < mapsize_x) && (0 < y && y < mapsize_y)){
-            					return null;
-            				}
-            				else if(x == 0 && y == 0){
-            					return 'top_left';
-            				}
-            				else if(x == 0 && y == mapsize_y){
-            					return 'bottom_left';
-            				}
-            				else if(x == mapsize_x && y == 0){
-            					return 'top_right';
-            				}
-            				else if(x == mapsize_x && y == mapsize_y){
-            					return 'bottom_right';
-            				}
-            				else if(y == 0) {
-            					return 'top';
-            				}
-            				else if(x == mapsize_x){
-            					return 'right';
-            				}
-            				else if(y == mapsize_y) {
-            					return 'bottom';
-            				}
-            				else if(x == 0){
-            					return 'left';
-            				}
+                            if((0 < x && x < mapsize_x) && (0 < y && y < mapsize_y)){
+                                return null;
+                            }
+                            else if(x === 0 && y === 0){
+                                return 'top_left';
+                            }
+                            else if(x === 0 && y == mapsize_y){
+                                return 'bottom_left';
+                            }
+                            else if(x == mapsize_x && y === 0){
+                                return 'top_right';
+                            }
+                            else if(x == mapsize_x && y == mapsize_y){
+                                return 'bottom_right';
+                            }
+                            else if(y === 0) {
+                                return 'top';
+                            }
+                            else if(x == mapsize_x){
+                                return 'right';
+                            }
+                            else if(y == mapsize_y) {
+                                return 'bottom';
+                            }
+                            else if(x === 0){
+                                return 'left';
+                            }
                                     
                         }
                     }
@@ -137,7 +134,7 @@
         
     
         this.eachHex(function(x,y){
-            this.set_hex_data();
+            this.set_hex_arc_data();
             this.set_traversal_data();
         });
         
