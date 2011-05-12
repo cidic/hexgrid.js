@@ -68,41 +68,19 @@
     
     
     
-     function mergeArcGroups(arcGroup1, arcGroup2) {
-        console.log(arcGroup1);
-        console.log(arcGroup2);
-        if( 
-                arcGroup1
-            &&  arcGroup1.length > 0
-            &&  arcGroup2
-            &&  arcGroup2.length > 0
-            ){
-
-            var ranges = [
-                {
-                    min : arcGroup1.min.radian,
-                    max : arcGroup1.max.radian
-                },
-                {
-                    min : arcGroup2.min.radian,
-                    max : arcGroup2.max.radian
-                }
-            ];
-        }
-        else {
-            return null;   
-        }
+     function mergeArcGroups(ranges) {
+        
         
         function overlaps (range1, range2) {
             // returns whether or not two ranges overlap
-            return (range1.max >= range2.min) && (range1.min <= range2.max);
+            return (range1.max.radian >= range2.min.radian) && (range1.min.radian <= range2.max.radian);
         }
         function merge (range1, range2) {
             // merges two ranges into one range
-            return {min:Math.min(range1.min, range2.min), max:Math.max(range1.max, range2.max)};
+            return {min:Math.min(range1.min.radian, range2.min.radian), max:Math.max(range1.max.radian, range2.max.radian)};
         }
         // make a copy of ranges and sort by min
-        ranges = ranges.slice().sort(function (a, b) { return a.min - b.min; });
+        ranges = ranges.slice().sort(function (a, b) { return a.min.radian - b.min.radian; });
         
         // fold each range in from the left, merging with the last value if they overlap
         return ranges.reduce(function (list, next) {
