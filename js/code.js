@@ -111,29 +111,29 @@
 				if(test){
 					highlight_hex_obj(target_hex);
 				}
-				console.log(x+','+y)
+                console.log(x+','+y);
 				console.log(test);
 			}
 		}
 	}
 
 	function get_min_max_group_hex_corners(hex1,hex_group){
-		// returns the min and max radian of the corners of hex_group when hex1 is the origin
-		// hex groups should only contain 1 or 2 hexes
-		// 	if there are 2 hexes
-		// 	we know the first ( hex_group[0] )is the left most
-		// 	and the second ( hex_group[1] ) is the right most
-		// 	because the arcs are cycled clockwise to form the groups
-	
+        // returns the min and max radian of the corners of hex_group when hex1 is the origin
+        // hex groups should only contain 1 or 2 hexes
+        // if there are 2 hexes
+        // we know the first ( hex_group[0] )is the left most
+        // and the second ( hex_group[1] ) is the right most
+        // because the arcs are cycled clockwise to form the groups
+
 		var hex_first = hex_group[0],
 			// get last hex in group (if there is 1 hex it will be the same as the first)	
-			hex_last = hex_group[hex_group.length - 1]
-		
-		var result = 	{
+			hex_last = hex_group[hex_group.length - 1],
+		    
+            result =    {
 							min : hex1.arc_data[hex_first.x][hex_first.y].min,
 							max : hex1.arc_data[hex_last.x][hex_last.y].max
-						}
-	 	return result;
+						};
+        return result;
 	}
 	function hex_inside_arc_group(hex1, hex2, arc_group){
 		// hex1: origin
@@ -234,7 +234,9 @@
 	
 	function get_los_arc_groups(origin_hex, blocking_hex_groups) {
 		var result = [];
-	
+	    if(blocking_hex_groups.length === 0){
+            return null;   
+	    }
 		for(var i = 0, len = blocking_hex_groups.length; i<len; i++) {
 			var arc_groups = get_min_max_group_hex_corners(origin_hex, blocking_hex_groups[i]);
 			
@@ -246,7 +248,7 @@
         
             draw_arc(
                 origin_hex.center.x,
-                origin_hex.center_coord.y,
+                origin_hex.center.y,
                 arc_groups.min.x,
                 arc_groups.min.y,
                 arc_groups.max.x,
@@ -254,10 +256,11 @@
                 );
  
 			//highlight the beging and ending hexes in the groups
-			highlight_hex_obj(blocking_hex_groups[i][0], 'blue');
-			
+		
+			 blocking_hex_groups[i][0].setColor('blue');
 			if(blocking_hex_groups[i].length > 1) {
-					highlight_hex_obj(blocking_hex_groups[i][1], 'blue');
+                   blocking_hex_groups[i][1].setColor('blue');
+			
 			}
 		}
 
@@ -274,48 +277,88 @@
 		var origin_hex = grid.hex(3,5),
 			loop_radius = 1,
 			max_loop_radius = 3,
-			los_arc_groups = [],
-            old_los_arc_groups = [];
+			los_arc_groups = [];
+           
 			
 		for(var r = loop_radius; r <= max_loop_radius; r++){
-		loop_radius = r;
+            loop_radius = r;
 		
-		var loop_hexes = get_hex_loop(origin_hex, loop_radius); // array of all hexes in loop
-		// if there are already los_arc_groups
-		var hidden_hexes = [];
+		    var loop_hexes = get_hex_loop(origin_hex, loop_radius); // array of all hexes in loop
+		    // if there are already los_arc_groups
+		    var hidden_hexes = [];
 		
-		if(los_arc_groups.length > 0) {
-			// filter out hexes that are not within the los_arc_groups
-            
-            
-			for(var j = 0,len = los_arc_groups.length; j<len; j++){
-				for(var i = 0,len2 = loop_hexes.length; i<len2; i++) {
-					
-					if(hex_inside_arc_group(origin_hex, loop_hexes[i], los_arc_groups[j])){
-						hidden_hexes.push(loop_hexes[i]);
-						highlight_hex_obj(loop_hexes[i], 'white');
-					}
-				}
-			}
-		}
+          /*  if(los_arc_groups.length > 0) {
+    
+                // filter out hexes that are not within the los_arc_groups
+                
+                for(var j = 0,len = los_arc_groups.length; j<len; j++){
+    				for(var i = 0,len2 = loop_hexes.length; i<len2; i++) {
+    					
+    					if(hex_inside_arc_group(origin_hex, loop_hexes[i], los_arc_groups[j])){
+    						hidden_hexes.push(loop_hexes[i]);
+    					
+                             loop_hexes[i].setColor('white');
+    					}
+    				}
+    			}
+    		}
+            */
       /*  console.log('los_arc_groups');
-		console.log(los_arc_groups);
+	
 		console.log('hidden_hexes');
 		console.log(hidden_hexes);
 	*/	
-		var	blocking_hex_groups = get_los_blocking_hex_groups(loop_hexes, blocks_los); // array of los blocking hex groups, needs full hex loop
+       
+		    var	blocking_hex_groups = get_los_blocking_hex_groups(loop_hexes, blocks_los); // array of los blocking hex groups, needs full hex loop
 			
             // save last loop field of view data
-            old_los_arc_groups = los_arc_groups;
+            var old_los_arc_groups = (los_arc_groups && los_arc_groups.length > 0)? los_arc_groups : null;
             
-			// array of field of view arc data
-			los_arc_groups = get_los_arc_groups(origin_hex, blocking_hex_groups);
+         /*   console.log('--');
+            console.log('old_los_arc_groups');
+            console.log(old_los_arc_groups);
 			
-            //merge new and old field of view data
-           // los_arc_groups = mergeRanges(old_los_arc_groups, los_arc_groups);
             
+            console.log('blocking_hex_groups');
+            console.log(blocking_hex_groups);
+           */ 
+       
+            // array of field of view arc data
+		    los_arc_groups = get_los_arc_groups(origin_hex, blocking_hex_groups);
+
+            if(old_los_arc_groups){
+                //merge new and old field of view data        
+                
+                    los_arc_groups = mergeRanges(old_los_arc_groups.concat(los_arc_groups));
+                    
+                
+            }
+            
+            
+            console.log('los_arc_groups');
+            console.log(los_arc_groups);
+ 
+ 
+           
+         
 			hexes = []; // reset hexes
-		}		
+		}
+        
+        if(los_arc_groups && los_arc_groups.length > 0){
+            
+            console.log(los_arc_groups);
+            
+            for(var i = 0, len = los_arc_groups.length; i<len; i++){
+                draw_arc(
+                    origin_hex.center.x,
+                    origin_hex.center.y,
+                    los_arc_groups[i].min.x,
+                    los_arc_groups[i].min.y,
+                    los_arc_groups[i].max.x,
+                    los_arc_groups[i].max.y
+                );
+            }
+        }
 		
 	}
 	

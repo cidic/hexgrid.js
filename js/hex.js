@@ -70,7 +70,7 @@
      
     hex.prototype.setColor = function(color){
         var color = color || 'blue',
-		    $target = $('#'+hex.x+'-'+hex.y+' div');
+		    $target = $('#'+this.x+'-'+this.y+' div');
         this.color = color;
 		$target.attr('class','hex '+color);
 	}
