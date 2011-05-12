@@ -43,6 +43,7 @@
             ];
       
     }
+    var testCount = 0;
     hex.prototype.set_hex_data = function() {
         
         
@@ -53,16 +54,13 @@
 		// maxRadian (most right(clockwise))
 		// minRadianCorner
 		// maxRadianCorner
-		
-		for (var x=0; x < mapsize_x; x++) {
-			for (var y=0; y < mapsize_y; y++) {
-				for(var i_x = 0, len = mapsize_x; i_x < len; i_x++){
-					for(var i_y = 0, len = mapsize_y; i_y < len; i_y++){
-						this.arc_data[i_x][i_y] = get_min_max_hex_corners(this.hexgrid.hex(x,y), this.hexgrid.hex(i_x,i_y), false);
-					}	
-				}
-			}
+		for(var i_x = 0, len = mapsize_x; i_x < len; i_x++){
+			for(var i_y = 0, len = mapsize_y; i_y < len; i_y++){
+				this.arc_data[i_x][i_y] = get_min_max_hex_corners(this, this.hexgrid.hex(i_x,i_y), false);
+                testCount++;
+			}	
 		}
+		
 	}
     
      

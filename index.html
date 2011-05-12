@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>Title</title>
+	<link type="text/css" href="css/style.css" rel="stylesheet" />
+	<script type="text/javascript" src="js/jquery-1.5.1.min.js"></script>
+    <script type="text/javascript" src="js/data_utilities.js"></script>
+     <script type="text/javascript" src="js/globals.js"></script>
+    <script type="text/javascript" src="js/hex.js"></script>
+     <script type="text/javascript" src="js/map.js"></script>
+    <script type="text/javascript" src="js/draw_map.js"></script>
+	<script type="text/javascript" src="js/data_utilities.js"></script>
+	
+	<script type="text/javascript" src="js/code.js"></script>
+
+	
+	
+	
+</head>
+
+<body>
+<!--
+	<div align='center'>
+		<a class='button' href='javascript://' onclick="javascript:remove_path();path(document.getElementById('x1').selectedIndex,document.getElementById('y1').selectedIndex,document.getElementById('x2').selectedIndex,document.getElementById('y2').selectedIndex);">Calculate shortest possible route</a> 
+
+		<br />
+		<br />
+		<p>
+			<label>Array Space (x,y)</label>
+			<input type="text" id="array_space"/>
+			<a href="#" id="btn_array_space">Array to Hex Space</a>
+		</p>
+		<p>
+			<label>Hex Space (x,y)</label>
+			<input type="text" id="hex_space"/>
+			<a href="#" id="btn_hex_space">Hex to Array Space</a>
+		</p>
+		<div id="info"> </div>
+		<p><a href="#" id="test_btn">cycle</a></p>
+		<p><a href="#" id="test_btn2">get results</a></p>
+	</div>
+	<br />
+	<br />
+	<div align='center'>
+		Start X1:
+		<select id="x1"> 
+			<option>0</option> 
+			<option>1</option> 
+			<option>2</option> 
+			<option>3</option> 
+			<option>4</option> 
+			<option>5</option> 
+			<option>6</option> 
+			<option>7</option> 
+			<option>8</option> 
+			<option>9</option> 
+		</select> 
+		Y1:
+		<select id="y1"> 
+			<option>0</option> 
+			<option>1</option> 
+			<option>2</option> 
+			<option>3</option> 
+			<option>4</option> 
+			<option>5</option> 
+			<option>6</option> 
+			<option>7</option> 
+			<option>8</option> 
+			<option>9</option> 
+		</select> 
+		<br />
+		Goal X2:
+		<select id="x2"> 
+			<option>0</option> 
+			<option>1</option> 
+			<option>2</option> 
+			<option>3</option> 
+			<option>4</option> 
+			<option>5</option> 
+			<option>6</option> 
+			<option>7</option> 
+			<option>8</option> 
+			<option selected>9</option> 
+		</select> 
+		Y2:
+		<select id="y2"> 
+			<option>0</option> 
+			<option>1</option> 
+			<option>2</option> 
+			<option>3</option> 
+			<option>4</option> 
+			<option>5</option> 
+			<option>6</option> 
+			<option>7</option> 
+			<option>8</option> 
+			<option selected>9</option> 
+		</select> 
+	</div>	
+	-->
+	<p><a id="btn_toggle_canvas" href="#">toggle canvas</a></p>
+	<div class="container">
+		<div id="map" class="map" style="width:300px;height: 300px;"></div>
+		<canvas id="canvas" class="canvas" width="300" height="300"></canvas>
+	</div>
+
+
+</body>
+</html>
