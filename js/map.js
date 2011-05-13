@@ -151,10 +151,10 @@
     });
     grid.generateHexes();
     grid.hex(3,6).blocksLos = true;
-     grid.hex(1,6).blocksLos = true;
+   /*  grid.hex(1,6).blocksLos = true;
      grid.hex(2,6).blocksLos = true;
      grid.hex(2,4).blocksLos = true;
-    
+    */
     $(function(){
         $('#map').html(grid.markup);
     });

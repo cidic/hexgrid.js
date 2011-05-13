@@ -97,3 +97,24 @@ function array_to_hex(hex){ return [(hex[1] - hex[0]), Math.floor((hex[0]+hex[1]
 		}
 		return result;
 	}
+    
+    /*
+        // Your Knowns
+d = 20          // Distance
+w = Math.PI/4 // Angle you want
+A.x = 3       // Point A's x-coord
+A.y = 4       // Point A's y-coord
+B.x = -5      // Point B's x-coord
+B.y = 7       // Point B's y-coord
+	
+// Find the vector AB
+AB.x = B.x - A.x // x-component
+AB.y = B.y - A.y // y-component
+
+// Find the angle made by vector AB
+t = arctan(AB.y/AB.x) // Use Math.atan2(AB.y, AB.x) if coding in Flash
+	
+// Find point C
+C.x = d * cos(w+t) + A.x // x-component
+C.y = d * sin(w+t) + A.y // y-component
+    */

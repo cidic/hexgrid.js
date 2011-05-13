@@ -245,16 +245,18 @@
 			// draw lines for testing purposes
          //   draw_extend_line(origin_hex.center_coord.x,origin_hex.center_coord.y,arc_groups.min.x,arc_groups.min.y, 'darkred');
 		//	draw_extend_line(origin_hex.center_coord.x,origin_hex.center_coord.y,arc_groups.max.x,arc_groups.max.y);
-        /*
+        
             draw_arc(
                 origin_hex.center.x,
                 origin_hex.center.y,
                 arc_groups.min.x,
                 arc_groups.min.y,
                 arc_groups.max.x,
-                arc_groups.max.y
+                arc_groups.max.y,
+                '100,100,200,0.1',
+                '50,50,200,0.9'
                 );
- */
+ 
 			//highlight the beging and ending hexes in the groups
 		
 			 blocking_hex_groups[i][0].setColor('blue');
@@ -296,7 +298,7 @@
             }
 
         
-          /*  if(los_arc_groups.length > 0) {
+            if(los_arc_groups  && los_arc_groups.length > 0) {
     
                 // filter out hexes that are not within the los_arc_groups
                 
@@ -311,7 +313,7 @@
     				}
     			}
     		}
-            */
+            
      
            
          
@@ -338,17 +340,37 @@
             
             for(var i = 0, len = los_arc_groups.length; i<len; i++){
                 
-                var min_x = (origin_hex.center.x + 100 * Math.cos(los_arc_groups[i].min / Math.PI * 180)),
-                    min_y = (origin_hex.center.y + 100 * Math.sin(los_arc_groups[i].min / Math.PI * 180)),
-                    max_x = (origin_hex.center.x + 100 * Math.sin(los_arc_groups[i].max / Math.PI * 180)),
-                    max_y = (origin_hex.center.y + 100 * Math.sin(los_arc_groups[i].max / Math.PI * 180));
-                    console.log(los_arc_groups[i]);
-console.log(min_x);
-console.log(min_y);
-console.log(max_x);
-console.log(max_y);
+                
+                var 
+                    min_deg = 1, // (los_arc_groups[i].min / Math.PI * 180) + (los_arc_groups[i].min > 0 ? 0 : 360),
+                    max_deg = (los_arc_groups[i].max / Math.PI * 180) + (los_arc_groups[i].max > 0 ? 0 : 360),
                     
-                draw_arc(
+                    //min_deg = (los_arc_groups[i].min / Math.PI * 180) % 360,
+                    //max_deg = (los_arc_groups[i].max / Math.PI * 180) % 360,
+                    
+                    min_x = (100 * Math.cos(min_deg)) + origin_hex.center.x,
+                    min_y = (100 * Math.sin(min_deg)) + origin_hex.center.y,
+                    
+                    max_x = (100 * Math.cos(max_deg)) + origin_hex.center.x,
+                    max_y = (100 * Math.sin(max_deg)) + origin_hex.center.y;
+                    
+                    
+                    
+                    
+                    console.log(los_arc_groups[i]);
+                
+                    console.log('min_deg : '+min_deg);
+                    console.log('max_deg : '+max_deg);
+                    
+                    console.log('min_x : '+min_x);
+                    console.log('min_y : '+min_y);
+                    
+                    console.log('max_x : '+max_x);
+                    console.log('max_y : '+max_y);
+                    
+                    draw_line(origin_hex.center.x, origin_hex.center.y, min_x, min_y, 'purple');
+                    draw_line(origin_hex.center.x, origin_hex.center.y, max_x, max_y);
+                /*draw_triangle(
                      origin_hex.center.x
                     ,origin_hex.center.y
                     ,min_x
@@ -356,7 +378,7 @@ console.log(max_y);
                     ,max_x
                     ,max_y
                     
-                );
+                );*/
             }
         }
 		

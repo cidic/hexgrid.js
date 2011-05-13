@@ -1,5 +1,5 @@
 function draw_line(line_x1, line_y1, line_x2, line_y2, color, width) {    
-		//checks if line crosses hex
+    	//checks if line crosses hex
 	var	color = color || 'red',
 		width = width || 1;
 	var canvas = document.getElementById('canvas');
@@ -43,9 +43,11 @@ function distance_test(hex_a,hex_b){
 
 
     
-    function draw_arc(x1,y1,x2,y2,x3,y3) {
+    function draw_arc(x1,y1,x2,y2,x3,y3, color1, color2) {
+        
         var extended_line1 = get_extended_line_coord(x1,y1,x2,y2),
             extended_line2 = get_extended_line_coord(x1,y1,x3,y3);
+          
         
         x2 = extended_line1.x;
         y2 = extended_line1.y;
@@ -53,17 +55,19 @@ function distance_test(hex_a,hex_b){
         x3 = extended_line2.x;
         y3 = extended_line2.y;
         
-        draw_triangle(x1,y1,x2,y2,x3,y3);
+        draw_triangle(x1,y1,x2,y2,x3,y3, color1, color2);
             
     }
-    function draw_triangle(x1,y1,x2,y2,x3,y3) {
+    function draw_triangle(x1,y1,x2,y2,x3,y3, color1, color2) {
         
         var canvas = document.getElementById('canvas');
 		if (canvas.getContext){
-	        var ctx = canvas.getContext('2d');
+	        var ctx = canvas.getContext('2d'),
+             color1 = color1 || '200,100,100,0.1',
+             color2 = color2 || '200,50,50,0.9';
 	
-        ctx.fillStyle = "rgba(200,100,100,0.1)";
-        ctx.strokeStyle = "rgba(200,50,50,0.9)";
+        ctx.fillStyle = "rgba("+color1+")";
+        ctx.strokeStyle = "rgba("+color2+")";
         ctx.globalAlpha = 1.0;
 		ctx.beginPath();
         ctx.moveTo(x1, y1);
