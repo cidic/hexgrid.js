@@ -308,7 +308,7 @@
     					if(hex_inside_arc_group(origin_hex, loop_hexes[i], los_arc_groups[j])){
     						hidden_hexes.push(loop_hexes[i]);
     					
-                            loop_hexes[i].setColor('white');
+                        //    loop_hexes[i].setColor('white');
     					}
     				}
     			}
@@ -341,27 +341,26 @@
             for(var i = 0, len = los_arc_groups.length; i<len; i++){
                 
                 
-                var 
-                    min_deg = 1, // (los_arc_groups[i].min / Math.PI * 180) + (los_arc_groups[i].min > 0 ? 0 : 360),
-                    max_deg = (los_arc_groups[i].max / Math.PI * 180) + (los_arc_groups[i].max > 0 ? 0 : 360),
-                    
+             /*   var 
+                    min_deg = -1.57,//(los_arc_groups[i].min / Math.PI * 180),// + (los_arc_groups[i].min > 0 ? 0 : 360),
+                    max_deg = ( / Math.PI * 180),// + (los_arc_groups[i].max > 0 ? 0 : 360),
+               */     
                     //min_deg = (los_arc_groups[i].min / Math.PI * 180) % 360,
                     //max_deg = (los_arc_groups[i].max / Math.PI * 180) % 360,
                     
-                    min_x = (100 * Math.cos(min_deg)) + origin_hex.center.x,
-                    min_y = (100 * Math.sin(min_deg)) + origin_hex.center.y,
+                    min_x = (100 * Math.cos(los_arc_groups[i].min)) + origin_hex.center.x,
+                    min_y = (100 * Math.sin(los_arc_groups[i].min)) + origin_hex.center.y,
                     
-                    max_x = (100 * Math.cos(max_deg)) + origin_hex.center.x,
-                    max_y = (100 * Math.sin(max_deg)) + origin_hex.center.y;
-                    
+                    max_x = (100 * Math.cos(los_arc_groups[i].max)) + origin_hex.center.x,
+                    max_y = (100 * Math.sin(los_arc_groups[i].max)) + origin_hex.center.y;
                     
                     
                     
                     console.log(los_arc_groups[i]);
-                
+                /*
                     console.log('min_deg : '+min_deg);
                     console.log('max_deg : '+max_deg);
-                    
+                  */  
                     console.log('min_x : '+min_x);
                     console.log('min_y : '+min_y);
                     

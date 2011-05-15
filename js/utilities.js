@@ -85,7 +85,7 @@ function distance_test(hex_a,hex_b){
 function get_extended_line_coord(x1,y1,x2,y2) {
     var slope = (y2 - y1) / (x2 - x1),
 	    yintercept = y1 - slope * x1,
-        xr = (x2 > x1) ? con_width : 0 ,
+        xr = (x2 > x1) ? grid.container_width : 0 ,
         yr = slope * xr + yintercept;
         
         return {

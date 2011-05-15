@@ -52,14 +52,14 @@
         
         
         // arc data	
-		// targetHex.arc_data[x][y] contains arc/radian data of mapHex[x][y] relative to origin hex(targetHex)
+		// targetHex.arc_data[x][y] contains arc/radian data of grid.hex[x][y] relative to origin hex(targetHex)
 		
 		// minRadian (most left (counterclockwise))
 		// maxRadian (most right(clockwise))
 		// minRadianCorner
 		// maxRadianCorner
-		for(var i_x = 0, len = mapsize_x; i_x < len; i_x++){
-			for(var i_y = 0, len2 = mapsize_y; i_y < len2; i_y++){
+		for(var i_x = 0, len = this.hexgrid.mapsize_x; i_x < len; i_x++){
+			for(var i_y = 0, len2 = this.hexgrid.mapsize_y; i_y < len2; i_y++){
 				this.arc_data[i_x][i_y] = get_min_max_hex_corners(this, this.hexgrid.hex(i_x,i_y), false);
                
 			}	
