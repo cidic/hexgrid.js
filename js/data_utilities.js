@@ -43,50 +43,212 @@
  
     function mergeRanges(ranges) {
         
-        console.log('ranges');
+      /*
+        console.log('ranges before merge');
         console.log(ranges);
-        
-        function overlaps (range1, range2) {
+        */
+        function merge(r1, r2) {
             // returns whether or not two ranges overlap
-            return (range1.max >= range2.min) && (range1.min <= range2.max);
+            // range spans pi if min and max ar on opposite sides of where -PI meets PI
+            
+            var r1spansPi = ((Math.abs(r1.max - r1.min)) > Math.PI),
+                r2spansPi = ((Math.abs(r2.max - r2.min)) > Math.PI),
+                r1Round = {
+                    min: Math.round(r1.min*10)/10,
+                    max: Math.round(r1.max*10)/10
+                    },
+                r2Round = {
+                    min: Math.round(r2.min*10)/10,
+                    max: Math.round(r2.max*10)/10
+                    },
+                result;
+                
+                /*
+                console.log('r1');
+                console.log(r1);
+                console.log('r1Round');
+                console.log(r1Round);
+                
+                console.log('r2');
+                console.log(r2);
+                console.log('r2Round');
+                console.log(r2Round);
+                
+                console.log('r1spansPi : '+ r1spansPi);
+                console.log('r2spansPi : '+ r2spansPi);
+                */
+                
+                if(!r1spansPi && !r2spansPi && (r1Round.max >= r2Round.min) && (r1Round.min <= r2Round.max)){
+                    
+                    return {min:Math.min(r1.min, r2.min), max:Math.max(r1.max, r2.max)};
+                
+                }
+                else if(r1spansPi && r2spansPi){
+                    // r1.min and r2.min are both going to be positive, get the lowest
+                    // r1.max and r2.max are both going to be negative, get the highest
+                    
+                    return {min:Math.max(r1.min, r2.min), max:Math.min(r1.max, r2.max)};
+                }
+                
+                else if(r1spansPi){
+                    // given r2spansPi == false
+                    
+                    if(r2.min <= r1.max){
+                        return {min: r1.min, max: r2.max};    
+                    }
+                    else if(r2.max >= r1.min){
+                        return {min: r2.min, max: r1.max};
+                    }
+                }
+                
+                else if(r2spansPi){
+                    // given r1spansPi == false
+                    
+                    if(r1.min <= r2.max){
+                        return {min: r2.min, max: r1.max};    
+                    }
+                    else if(r1.max >= r2.min){
+                        return {min: r1.min, max: r2.max};
+                    }
+                }
+                else {
+                    return false;   
+                }
+               
+           
         }
-        function merge (range1, range2) {
-            // merges two ranges into one range
-            return {min:Math.min(range1.min, range2.min), max:Math.max(range1.max, range2.max)};
-        }
+       
         // make a copy of ranges and sort by min
         ranges = ranges.slice().sort(function (a, b) { return a.min - b.min; });
         
         // fold each range in from the left, merging with the last value if they overlap
-        return ranges.reduce(function (list, next) {
-            var last = list[list.length - 1];
-            if (overlaps(last, next)) list.splice(-1, 1, merge(last, next));
-            else list.push(next);
+        
+        var result = ranges.reduce(function (list, next) {
+            var last = list[list.length - 1],
+                newMerge = merge(last,next);
+                
+            if (newMerge){
+                list.splice(-1, 1, newMerge);
+            }
+            else {
+                list.push(next);
+            }
             return list;
         }, ranges.splice(0, 1));
+        
+        /*
+        console.log('ranges after merge');
+        console.log(result);
+        */
+        return result;
     }
     
     
+   
     
-     function mergeArcGroups(ranges) {
-        
-        
-        function overlaps (range1, range2) {
-            // returns whether or not two ranges overlap
-            return (range1.max.radian >= range2.min.radian) && (range1.min.radian <= range2.max.radian);
+    
+ 
+    
+
+    
+    function mergeTest2(arc1,arc2){
+        var a1= arc1.min.toFixed(6),
+		    a2 = arc1.max.toFixed(6),
+	        b1 = arc2.min.toFixed(6),
+    		b2 = arc2.max.toFixed(6),
+            // using cyclic permutations to test the order of the arcs
+	    	// testArr : this is the order we want to see the radians in for the hex to be inside the arc
+            testArr = [
+                [a1,b1,a2,b2],
+                [b1,a1,b2,a2],
+                [a1,b1,b2,a2],
+                [b1,a1,a2,b2]
+            ];
+            
+        for(var i = 0; i<testArr.length; i++){
+            var testString = testArr[i].concat(testArr[i]).join(''),
+                testString2 = testArr[i].sort(function(a,b){return a - b; }).join('');
+                
+            if(testString.indexOf(testString2) != -1) {
+                return { min : testArr[i][0], max : testArr[i][3] }
+            }
         }
-        function merge (range1, range2) {
-            // merges two ranges into one range
-            return {min:Math.min(range1.min.radian, range2.min.radian), max:Math.max(range1.max.radian, range2.max.radian)};
+        return false;
+    }
+    
+    function merge2(ranges){
+		// hex1: origin
+		// hex2: target hex
+		// arc_group
+        
+        if(ranges.length < 1) return ranges;
+        
+        console.log('before merge');
+        console.log(ranges);
+        function overlaps(arc1,arc2){
+            var precision = 6,
+                a1= arc1.min.toFixed(precision),
+			    a2 = arc1.max.toFixed(precision),
+		        b1 = arc2.min.toFixed(precision),
+        		b2 = arc2.max.toFixed(precision),
+                aCrossesZero = ((Math.abs(a2 - a1)) > Math.PI),
+                bCrossesZero = ((Math.abs(b2 - b1)) > Math.PI),
+                // using cyclic permutations to test the order of the arcs
+		    	// testArr : this is the order we want to see the radians in for the hex to be inside the arc
+                testArr = [
+                    [a1,b1,a2,b2],
+                    [b1,a1,b2,a2],
+                    [a1,b1,b2,a2],
+                    [b1,a1,a2,b2]
+                ],
+                _min,
+                _max;
+                
+            for(var i = 0; i<testArr.length; i++){
+                var testString = testArr[i].concat(testArr[i]).join(''),
+                    testString2 = testArr[i].sort(function(a,b){return a - b; }).join('');
+                    
+                if(testString.indexOf(testString2) != -1) {
+                    
+                    if(aCrossesZero || bCrossesZero){
+                        if(Math.abs(a1) >= Math.abs(b1)){
+                            _min = a1; 
+                        }
+                        else {
+                            _min = b1;   
+                        }
+                       
+                        if(Math.abs(a2) >= Math.abs(b2)){
+                            _max = a2;
+                        }
+                        else {
+                            _max = b2;
+                        }
+                        
+                        return { min : _min, max : _max}
+                        
+                    }
+                    return { min : Math.min.apply(null, testArr[i]), max : Math.max.apply(null, testArr[i]) }
+                }
+            }
+            return false;
         }
         // make a copy of ranges and sort by min
-        ranges = ranges.slice().sort(function (a, b) { return a.min.radian - b.min.radian; });
-        
-        // fold each range in from the left, merging with the last value if they overlap
-        return ranges.reduce(function (list, next) {
-            var last = list[list.length - 1];
-            if (overlaps(last, next)) list.splice(-1, 1, merge(last, next));
+        ranges = ranges.slice().sort(function (a, b) { return a.min - b.min; });
+
+        var result = ranges.reduce(function (list, next) {
+            var last = list[list.length - 1],
+                newMerge = overlaps(last, next);
+            
+            console.log(newMerge);
+            
+            if (newMerge) list.splice(-1, 1, newMerge);
             else list.push(next);
             return list;
         }, ranges.splice(0, 1));
+        
+        console.log('after merge');
+        console.log(ranges);
+        
+        return result;
     }

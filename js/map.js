@@ -145,24 +145,62 @@
         this.markup = map_markup;
         
     }
-
+     hexgrid.prototype.exportData = function() {
+        return JSON.stringify(grid.hexes,function(k,v){return((k==='get_adjacent' || k==='hexgrid' || k==='get_n_hex' || k==='get_ne_hex' || k==='get_nw_hex' || k==='get_s_hex' || k ==='get_se_hex' || k==='get_se_hex' || k==='get_sw_hex')?undefined:v);});
+    }
+    hexgrid.prototype.importData = function(data) {
+        this.hexes = data;
+          this.eachHex(function(x,y){
+            this.set_traversal_data();
+        });
+    }
     var grid = new hexgrid({
-         mapsize_x : 50
-        ,mapsize_y : 50
+         mapsize_x : 10
+        ,mapsize_y : 10
         ,hex_width : 30
         ,hex_height : 26
         ,hex_corner_offset : 8
   
     });
     grid.generateHexes();
-    grid.hex(3,6).blocksLos = true;
-     grid.hex(1,6).blocksLos = true;
-     grid.hex(2,6).blocksLos = true;
-     grid.hex(2,4).blocksLos = true;
+    /*
+    //grid.hex(1,6).blocksLos = true;
+    grid.hex(4,4).blocksLos = true;
+    grid.hex(2,5).blocksLos = true;
+    grid.hex(6,4).blocksLos = true;
+   
+    grid.hex(0,6).blocksLos = true;
+    // grid.hex(4,6).blocksLos = true;
+  //  grid.hex(5,5).blocksLos = true;
+   */
+    
+    
+    /*--- test case ---*/
+    //grid.hex(3,3).blocksLos = true;
+    //grid.hex(4,4).blocksLos = true;
+    grid.hex(3,4).blocksLos = true;
+    grid.hex(2,5).blocksLos = true;
+    grid.hex(2,6).blocksLos = true;
+    //grid.hex(1,5).blocksLos = true;
+    //grid.hex(0,6).blocksLos = true;
+    
+    
+    
+    //randomBlocking(25);
+    function randomBlocking(hexesToBlock){
+        
+        for(var i = 0; i<hexesToBlock; i++){
+            var rX = Math.floor(Math.random() * grid.mapsize_x), 
+                rY = Math.floor(Math.random() * grid.mapsize_y);
+            grid.hex(rX,rY).blocksLos = true;
+        }
+     
+     
+    }
     
     $(function(){
         $('#map').html(grid.markup);
-        console.log(grid);
+    
         $('.container #map, .container')
             .width(grid.container_width)
             .height(grid.container_height)
@@ -171,4 +209,5 @@
 			.attr('width', grid.container_width)
 			.attr('height', grid.container_height)
 		;
+        
     });

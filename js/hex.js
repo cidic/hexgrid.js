@@ -25,6 +25,7 @@
     }
     hex.prototype.set_traversal_data = function() {
     // traversal data
+    
         this.get_s_hex  = this.hexgrid.hex(this.x, this.y + 1);
         this.get_ne_hex = this.hexgrid.hex(this.x +1, ((this.x&1) === 0)? this.y - 1 : this.y);
         

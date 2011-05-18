@@ -42,7 +42,19 @@ function distance_test(hex_a,hex_b){
 }
 
 
-    
+function draw_fov(x1,y1,min,max) {
+       var canvas = document.getElementById('canvas');
+    	if (canvas.getContext){
+	        var ctx = canvas.getContext('2d');
+            
+            ctx.arc(x1,y1, 100,min, max,false);
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = "black"; // line color
+            ctx.stroke();
+
+        
+        }
+}
     function draw_arc(x1,y1,x2,y2,x3,y3, color1, color2) {
         
         var extended_line1 = get_extended_line_coord(x1,y1,x2,y2),
@@ -60,11 +72,20 @@ function distance_test(hex_a,hex_b){
     }
     function draw_triangle(x1,y1,x2,y2,x3,y3, color1, color2) {
         
+        var colors = ['255,0,0','0,255,0','0,0,255','0,130,130',,'255,200,0'];
+        
+        function c() {
+                var index = Math.floor(Math.random() * colors.length);
+                return colors[index];
+        }
+        var rCol =  c();
+        
+        
         var canvas = document.getElementById('canvas');
 		if (canvas.getContext){
 	        var ctx = canvas.getContext('2d'),
-             color1 = color1 || '200,100,100,0.1',
-             color2 = color2 || '200,50,50,0.9';
+             color1 = color1 || rCol+',0.1',
+             color2 = color2 || rCol+',0.9';
 	
         ctx.fillStyle = "rgba("+color1+")";
         ctx.strokeStyle = "rgba("+color2+")";
