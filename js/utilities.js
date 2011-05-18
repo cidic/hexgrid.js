@@ -1,23 +1,98 @@
-function draw_line(line_x1, line_y1, line_x2, line_y2, color, width) {    
+
+/*--- draw tools ---*/
+function draw_line(x1, y1, x2, y2, color, width) {    
     	//checks if line crosses hex
+        
+        
+        
 	var	color = color || 'red',
 		width = width || 1;
-	var canvas = document.getElementById('canvas');
+
+	    grid.draw(function(){            
+    		this.beginPath();
+    		this.moveTo(x1, y1);
+    		this.lineTo(x2, y2);
+    		this.strokeStyle = color;
+    		this.lineWidth = width;
+    		this.stroke();
+    		this.closePath();
+	    });
+
+}
+
+
+
+function draw_fov(x1, y1, min, max, distance) {
+   // min,max = radian values
+    var distance = distance || 50;
+     grid.draw(function(){
+         
+        this.fillStyle = "rgba(255, 50,50, .15)";
+        this.strokeStyle = "rgba(255, 50,50, .8)";
+        this.moveTo(x1,y1);
+        this.beginPath();
+        this.arc(x1,y1, distance ,max + (2*Math.PI), min + (2*Math.PI),true);
+        this.lineTo(x1,y1);
+        this.closePath();
+	    this.fill();
+        this.stroke();
+     });
+}
+function draw_radian_line(x, y, radian, distance, color, width) {
+    
+var _x = (distance * Math.cos(radian)) + x,
+    _y = (distance * Math.sin(radian)) + y;
+    
+        draw_line(x,y,_x,_y,color,width);
+                    
+}
+   
+    function draw_triangle(x1,y1,x2,y2,x3,y3, color1, color2) {
+        
+        var colors = ['255,0,0','0,255,0','0,0,255','0,130,130','255,200,0'];
+        
+        function c() {
+                var index = Math.floor(Math.random() * colors.length);
+                return colors[index];
+        }
+        var rCol =  c();
+        
+        
+        var canvas = document.getElementById('canvas');
+		if (canvas.getContext){
+	        var ctx = canvas.getContext('2d'),
+             color1 = color1 || rCol+',0.1',
+             color2 = color2 || rCol+',0.9';
 	
-	if (canvas.getContext){
-	    var ctx = canvas.getContext('2d');
-		ctx.beginPath();
-		ctx.moveTo(line_x1, line_y1);
-		ctx.lineTo(line_x2, line_y2);
-		ctx.strokeStyle = color;
-		ctx.lineWidth = width;
-		ctx.stroke();
-		ctx.closePath();
-	}
+            grid.draw(function(){
+                this.fillStyle = "rgba("+color1+")";
+                this.strokeStyle = "rgba("+color2+")";
+                this.globalAlpha = 1.0;
+                this.beginPath();
+                this.moveTo(x1, y1);
+                this.lineTo(x2, y2);
+                this.lineTo(x3, y3);
+                this.lineTo(x1, y1);
+                this.closePath();
+                this.stroke();
+                this.fill();
+            });
+		}
+    }
+function get_extended_line_coord(x1,y1,x2,y2) {
+    var slope = (y2 - y1) / (x2 - x1),
+	    yintercept = y1 - slope * x1,
+        xr = (x2 > x1) ? grid.container_width : 0 ,
+        yr = slope * xr + yintercept;
+        
+        return {
+            x: xr,
+            y: yr
+        };
 }
 
 function distance_test(hex_a,hex_b){
-	var dist,
+    var dist,
 		// must be hex space coords
 		A_x = hex_a[0],
 		A_y = hex_a[1],
@@ -41,127 +116,6 @@ function distance_test(hex_a,hex_b){
 	console.log('dist_test2 : '+dist2);
 }
 
-
-function draw_fov(x1,y1,min,max) {
-       var canvas = document.getElementById('canvas');
-    	if (canvas.getContext){
-	        var ctx = canvas.getContext('2d');
-            
-            ctx.arc(x1,y1, 100,min, max,false);
-            ctx.lineWidth = 5;
-            ctx.strokeStyle = "black"; // line color
-            ctx.stroke();
-
-        
-        }
-}
-    function draw_arc(x1,y1,x2,y2,x3,y3, color1, color2) {
-        
-        var extended_line1 = get_extended_line_coord(x1,y1,x2,y2),
-            extended_line2 = get_extended_line_coord(x1,y1,x3,y3);
-          
-        
-        x2 = extended_line1.x;
-        y2 = extended_line1.y;
-        
-        x3 = extended_line2.x;
-        y3 = extended_line2.y;
-        
-        draw_triangle(x1,y1,x2,y2,x3,y3, color1, color2);
-            
-    }
-    function draw_triangle(x1,y1,x2,y2,x3,y3, color1, color2) {
-        
-        var colors = ['255,0,0','0,255,0','0,0,255','0,130,130',,'255,200,0'];
-        
-        function c() {
-                var index = Math.floor(Math.random() * colors.length);
-                return colors[index];
-        }
-        var rCol =  c();
-        
-        
-        var canvas = document.getElementById('canvas');
-		if (canvas.getContext){
-	        var ctx = canvas.getContext('2d'),
-             color1 = color1 || rCol+',0.1',
-             color2 = color2 || rCol+',0.9';
-	
-        ctx.fillStyle = "rgba("+color1+")";
-        ctx.strokeStyle = "rgba("+color2+")";
-        ctx.globalAlpha = 1.0;
-		ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.lineTo(x3, y3);
-        ctx.lineTo(x1, y1);
-		ctx.closePath();
-        ctx.stroke();
-		ctx.fill();
-    
-	
-    
-		}
-    }
-function get_extended_line_coord(x1,y1,x2,y2) {
-    var slope = (y2 - y1) / (x2 - x1),
-	    yintercept = y1 - slope * x1,
-        xr = (x2 > x1) ? grid.container_width : 0 ,
-        yr = slope * xr + yintercept;
-        
-        return {
-            x: xr,
-            y: yr
-        };
-}
-function draw_extend_line(x1,y1,x2,y2, color) {
-	//extends line to edge of canvas
-	//draw_line(x1,y1,x2,y2, 'red', 5);
-	var canvas = document.getElementById('canvas');
-		if (canvas.getContext){
-		    var ctx = canvas.getContext('2d');
-	/*	ctx.fillStyle = 'black';
-    
-		ctx.beginPath();
-		ctx.arc(x1,y1,5,0,Math.PI*2,true);
-		ctx.closePath();
-		ctx.fill();
-*/
-	
-	
-	}
-		
-		var x = x2 - x1,
-			y = y2 - y1,
-		
-		distance = Math.sqrt(x * x + y * y),
-		radian = Math.atan2(y, x),
-		degree = radian * 180 / Math.PI, //confirmed correct
-		slope = (y2 - y1) / (x2 - x1),
-		yintercept = y1 - slope * x1,
-		
-		
-		//convert back to cartesian coords
-		_x = x1 + distance * Math.cos(radian),
-		_y = y1 + distance * Math.sin(radian);		
-		
-		console.log('slope : '+slope);
-		
-        var xr;
-        if(x2 > x1){
-            xr = con_width;   
-        }
-        else {
-            xr = 0;   
-        }
-        yr = slope * xr + yintercept;
-         
-        draw_line(x1,y1,xr,yr, color);
-
-		
-
-		
-}
 function math_stuff(){
     var x1 = 75,
 		y1 = 75,
@@ -218,14 +172,6 @@ function math_stuff(){
 
 				console.log('_x : '+ _x);
 				console.log('_y : '+ _y);
-
-	}
-    function extend_line2(){
-		
-		
-		// let A = <x_a, y_a> and B = <x_b, y_b> be your two points. The ray pointing from A to B is given by (1-t)A + tB = <(1-t)x_a + tx_b, (1-t)y_a + ty_b>
-		// you have four edges to your square, y = y1, y=y2, x=x1 and x=x2. Solve for the value t which reaches your edge -- for example (1-t)x_a + tx_b = x, then t(x_b-x_a) = x - x_a or t = (x - x_a)/(x_b - x_a) -- now you have a formula for t
-		// you want to calcuate out four values, t1 = (x1 - x_a)/(x_b-x_a), t2 = (x2-x_a)/(x_b-x_a), t3 = (y1 - y_a)/(y_b-y_a), t4 = (y2-y_a)/(y_b-y_a) -- the t that corresponds to the first time it hits a boundary line is the smallest non-negtive t. It is one of thouse four, once you have that your point is just ( (1-t)x_a + x_b, (1-t)y_a+y_b)
 
 	}
     $(function() {

@@ -1,5 +1,5 @@
 
-    
+    var zxc = document.getElementById('canvas');
     
     function hexgrid(args){
         
@@ -15,6 +15,25 @@
 		this.map_pixel_height = this.hex_height * this.mapsize_y;
 		this.container_width = this.hex_width * this.mapsize_y + (this.hex_height/2);
 		this.container_height = this.hex_height * this.mapsize_y + (this.hex_height/2) + 2;
+        
+        this._canvasId = args.canvas;
+        
+       var xthis = this;
+       $(function(){
+            xthis.canvas = $('#'+ xthis._canvasId);
+       });
+       
+     
+        this.getCtx = function(){
+                            return (this.canvas[0].getContext)? this.canvas[0].getContext('2d') : null;
+                        };
+        this.draw = function(drawFunction){
+            if(this.canvas[0].getContext){
+                var ctx = this.canvas[0].getContext('2d');
+                drawFunction.apply(ctx);
+            }
+        }
+                
 
         this.markup = '';
         this.hex = function (x,y){
@@ -160,6 +179,8 @@
         ,hex_width : 30
         ,hex_height : 26
         ,hex_corner_offset : 8
+        ,canvas : 'canvas'
+        
   
     });
     grid.generateHexes();
@@ -172,17 +193,16 @@
     grid.hex(0,6).blocksLos = true;
     // grid.hex(4,6).blocksLos = true;
   //  grid.hex(5,5).blocksLos = true;
-   */
+   *
     
     
     /*--- test case ---*/
-    //grid.hex(3,3).blocksLos = true;
-    //grid.hex(4,4).blocksLos = true;
-    grid.hex(3,4).blocksLos = true;
+    grid.hex(5,5).blocksLos = true;
+    
+    //grid.hex(3,4).blocksLos = true;
     grid.hex(2,5).blocksLos = true;
     grid.hex(2,6).blocksLos = true;
-    //grid.hex(1,5).blocksLos = true;
-    //grid.hex(0,6).blocksLos = true;
+  
     
     
     

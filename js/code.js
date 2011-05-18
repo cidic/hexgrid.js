@@ -177,9 +177,7 @@
 			group_start_index,
 			first_item_valid = false,
 			last_value;
-		
-        console.log('hexes');    
-    	console.log(hexes);
+	
 	    hexes.reduce(function(previousValue, currentValue, index, array){   
 		
 	        var item_valid = validateFunc(currentValue);
@@ -250,6 +248,7 @@
 		//	draw_extend_line(origin_hex.center.x,origin_hex.center.y,arc_groups.max.x,arc_groups.max.y);
         
           //console.log(arc_groups);
+          /*
          draw_triangle(
                 origin_hex.center.x,
                 origin_hex.center.y,
@@ -260,7 +259,7 @@
                 '200,100,100,0.3',
                 '250,50,50,0.9'
                 );
- 
+ */
 			//highlight the beging and ending hexes in the groups
 		
 		
@@ -273,7 +272,7 @@
 		
 		function blocks_los(hex){
 			var blocks = (hex.blocksLos)? true : false;
-			if(blocks){ hex.setColor('white'); }
+			if(blocks){ hex.setColor('blue'); }
 			return blocks;
 		}
 		var origin_hex = grid.hex(3,5),
@@ -290,11 +289,10 @@
 		    var hidden_hexes = [];
 		    // array of los blocking hex groups, needs full hex loop
             var blocking_hex_groups = get_los_blocking_hex_groups(loop_hexes, blocks_los, los_arc_groups); 
-            console.log('blocking_hex_groups');
-            console.log(blocking_hex_groups);
+           
             var new_los_arc_groups = get_los_arc_groups(origin_hex, blocking_hex_groups);
             
-			  // array of field of view arc data
+			// array of field of view arc data
             if(new_los_arc_groups && new_los_arc_groups.length > 0){
                 los_arc_groups = los_arc_groups.concat(new_los_arc_groups);
             }
@@ -331,18 +329,8 @@
         
         // array of field of view arc data
         
-        
-        
-        
         var arr = mergeRanges(los_arc_groups);
-            //arr2 = mergeTest2(los_arc_groups[0],los_arc_groups[1]);
-            
-            
-              
-         //console.log(los_arc_groups[0],los_arc_groups[1]);
-        
- 
- 
+          
  
         los_arc_groups = arr;
       
@@ -357,29 +345,15 @@
                     max_x = (100 * Math.cos(los_arc_groups[i].max)) + origin_hex.center.x,
                     max_y = (100 * Math.sin(los_arc_groups[i].max)) + origin_hex.center.y;
                 
-               //     draw_line(origin_hex.center.x, origin_hex.center.y, min_x, min_y, 'purple');
-                 //   draw_line(origin_hex.center.x, origin_hex.center.y, max_x, max_y);
-                 
-               /*  draw_fov(
+           
+                
+                draw_fov(
                      origin_hex.center.x
                     ,origin_hex.center.y
                     ,los_arc_groups[i].min
                     ,los_arc_groups[i].max
-                     );
-                 */    
-                 
-                draw_triangle(
-                     origin_hex.center.x
-                    ,origin_hex.center.y
-                    ,min_x
-                    ,min_y
-                    ,max_x
-                    ,max_y
-                    ,'100,100,200,0.1'
-                    ,'50,50,200,0.9'
-             
                     
-                );
+                    );
                 
                
             }
