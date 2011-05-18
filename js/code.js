@@ -167,7 +167,8 @@
 			
 			
 	}
-	function get_los_blocking_hex_groups_backup(hexes, validateFunc, los_arc_groups) {
+	
+    function get_los_blocking_hex_groups(hexes, validateFunc, los_arc_groups) {
         // TODO consider filtering out hexes already out of los as per los_arc_groups
 		// creates an array of los blocking arcs from hexes in the loop with properties that block los
 
@@ -177,70 +178,8 @@
 			first_item_valid = false,
 			last_value;
 		
-	    hexes.reduce(function(previousValue, currentValue, index, array){   
-		
-	        var item_valid = validateFunc(currentValue);
-	
-			if(index === 0){
-				first_item_valid = item_valid;
-			}
-			
-	        if(item_valid &&  !prev_item_valid) { //start new group
-			
-				data_groups.push([currentValue]);
-				group_start_index = index;
-				
-
-	        }
-	        else if(!item_valid && prev_item_valid){ //close group)
-				if(index - group_start_index > 1) {
-					// if this group has more then one hex in it, to prevent the same hex being saved as start and end
-					data_groups[data_groups.length - 1].push(previousValue);					
-				}
-				else {
-				}
-	        }
-	        prev_item_valid = item_valid;
-	
-			if(index === array.length - 1){
-				last_value = currentValue;
-				
-			}
-                return array[index];
-			
-	    }, 0);
-	
-		if(prev_item_valid){
-			
-			if(first_item_valid){
-				// if the first and last hexes are valid
-				var last_group = data_groups[data_groups.length - 1],
-					first_group = data_groups[0];
-					
-				// concat the last hex in the first group and the first hex in the and last group
-				// save them to the last group
-				data_groups[data_groups.length - 1] = last_group.concat(first_group[first_group.length - 1]);
-				
-				//delete the first group
-				data_groups.splice (0,1);
-			}
-			else {
-				//close any open groups
-				data_groups[data_groups.length - 1].push(last_value);
-			}
-		}
-	    return data_groups;
-	}
-        function get_los_blocking_hex_groups(hexes, validateFunc, los_arc_groups) {
-        // TODO consider filtering out hexes already out of los as per los_arc_groups
-		// creates an array of los blocking arcs from hexes in the loop with properties that block los
-
-	    var prev_item_valid = false,
-	        data_groups = [],
-			group_start_index,
-			first_item_valid = false,
-			last_value;
-		
+        console.log('hexes');    
+    	console.log(hexes);
 	    hexes.reduce(function(previousValue, currentValue, index, array){   
 		
 	        var item_valid = validateFunc(currentValue);
@@ -324,11 +263,7 @@
  
 			//highlight the beging and ending hexes in the groups
 		
-			 blocking_hex_groups[i][0].setColor('blue');
-			if(blocking_hex_groups[i].length > 1) {
-                   blocking_hex_groups[i][1].setColor('blue');
-			
-			}
+		
 		}
 
 		return result;
@@ -338,7 +273,7 @@
 		
 		function blocks_los(hex){
 			var blocks = (hex.blocksLos)? true : false;
-			//if(blocks){ hex.setColor('white'); }
+			if(blocks){ hex.setColor('white'); }
 			return blocks;
 		}
 		var origin_hex = grid.hex(3,5),
