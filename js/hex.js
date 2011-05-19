@@ -3,9 +3,10 @@
         
         var args = args || {};
         
-        this.hexgrid     = args.hexgrid;
+        
         this.x           = args.x;
         this.y           = args.y;
+        this.hexgrid     = args.hexgrid;
         this.center = {
             x : args.center_x,
             y : args.center_y
@@ -44,7 +45,7 @@
             ,this.get_n_hex
             ,this.get_se_hex
             ,this.get_sw_hex
-            ].filter(function(val) { return val !== null; });
+            ].filter(function(val) { return val !== false; });
            
             
       

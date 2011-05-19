@@ -15,8 +15,11 @@
 			funcIsValid = (func && typeof(func) === "function")? true : false,
             
             process = function(hex){
-                if(funcIsValid)
-                    func(hex);
+                if(next){
+                    // if hex exists
+                    
+                    if(funcIsValid) func(hex);
+                }
             },
             
             do_loop = function(hex, direction,  start_index) {
@@ -275,7 +278,7 @@
 			if(blocks){ hex.setColor('blue'); }
 			return blocks;
 		}
-		var origin_hex = grid.hex(3,5),
+		var origin_hex = grid.hex(6,6),
 			loop_radius = 1,
 			max_loop_radius = 3,
 			los_arc_groups = [];
@@ -284,7 +287,7 @@
 		for(var r = loop_radius; r <= max_loop_radius; r++){
             loop_radius = r;
 		
-		    var loop_hexes = get_hex_loop(origin_hex, loop_radius); // array of all hexes in loop
+		    var loop_hexes = get_hex_loop(origin_hex, loop_radius/*, function(hex){hex.setColor('blue');}*/); // array of all hexes in loop
 		    // if there are already los_arc_groups
 		    var hidden_hexes = [];
 		    // array of los blocking hex groups, needs full hex loop
@@ -300,7 +303,7 @@
         
             if(los_arc_groups  && los_arc_groups.length > 0) {
     
-                // filter out hexes that are not within the los_arc_groups
+                // filter out hexes that are not within the los_arc_groups color them white
                 for(var j = 0,len = los_arc_groups.length; j<len; j++){
     				for(var i = 0,len2 = loop_hexes.length; i<len2; i++) {
     					
@@ -328,33 +331,27 @@
        }
         
         // array of field of view arc data
-        
+        //*
         var arr = mergeRanges(los_arc_groups);
-          
- 
         los_arc_groups = arr;
-      
+        //*/
      
         if(los_arc_groups && los_arc_groups.length > 0){
             
             for(var i = 0, len = los_arc_groups.length; i<len; i++){
                   
-                    min_x = (100 * Math.cos(los_arc_groups[i].min)) + origin_hex.center.x,
-                    min_y = (100 * Math.sin(los_arc_groups[i].min)) + origin_hex.center.y,
-                    
-                    max_x = (100 * Math.cos(los_arc_groups[i].max)) + origin_hex.center.x,
-                    max_y = (100 * Math.sin(los_arc_groups[i].max)) + origin_hex.center.y;
-                
-           
-                
+                ///*
                 draw_fov(
                      origin_hex.center.x
                     ,origin_hex.center.y
                     ,los_arc_groups[i].min
                     ,los_arc_groups[i].max
-                    
+                    ,(30* i) +20
+                    ,"rgba(50, 50,250, .15)"
+                    ,"rgba(0,0,250, .9)"
+                   // ,true
                     );
-                
+               // */
                
             }
         }

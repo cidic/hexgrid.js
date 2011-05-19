@@ -47,7 +47,7 @@
                 return this.hexes[x][y];
             }
             else {
-                return null;   
+                return false;   
             }
         };
     }
@@ -199,14 +199,15 @@
     /*--- test case ---*/
     grid.hex(5,5).blocksLos = true;
     
-    //grid.hex(3,4).blocksLos = true;
-    grid.hex(2,5).blocksLos = true;
-    grid.hex(2,6).blocksLos = true;
+    //grid.hex(2,6).blocksLos = true;
+    grid.hex(3,4).blocksLos = true;
+    grid.hex(5,3).blocksLos = true;
   
     
     
     
     //randomBlocking(25);
+    
     function randomBlocking(hexesToBlock){
         
         for(var i = 0; i<hexesToBlock; i++){

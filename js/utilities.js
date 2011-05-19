@@ -22,13 +22,16 @@ function draw_line(x1, y1, x2, y2, color, width) {
 
 
 
-function draw_fov(x1, y1, min, max, distance) {
+function draw_fov(x1, y1, min, max, distance, color1, color2, drawValues,note) {
    // min,max = radian values
-    var distance = distance || 50;
+    var distance = distance || 50,
+        color1 = color1 || "rgba(255, 50,50, .15)",
+        color2 = color2 || "rgba(255, 50,50, .8)",
+        drawValues = drawValues || false;
      grid.draw(function(){
          
-        this.fillStyle = "rgba(255, 50,50, .15)";
-        this.strokeStyle = "rgba(255, 50,50, .8)";
+        this.fillStyle = color1;
+        this.strokeStyle = color2;
         this.moveTo(x1,y1);
         this.beginPath();
         this.arc(x1,y1, distance ,max + (2*Math.PI), min + (2*Math.PI),true);
@@ -36,6 +39,33 @@ function draw_fov(x1, y1, min, max, distance) {
         this.closePath();
 	    this.fill();
         this.stroke();
+        
+        if(drawValues){ 
+            var lblDistance = distance;
+            draw_radian_line(x1,y1,min,lblDistance, "rgba(0,0,0, .5)");
+            draw_radian_line(x1,y1,max,lblDistance, "rgba(0,0,0, .4)");
+            
+            var minX = (lblDistance * Math.cos(min)) + x1,
+                minY = (lblDistance * Math.sin(min)) + y1,
+                maxX = (lblDistance * Math.cos(max)) + x1,
+                maxY = (lblDistance * Math.sin(max)) + y1;
+                
+            this.fillStyle    = '#000';
+            this.font         = '8px sans-serif';
+            this.textBaseline = 'top';
+           
+            this.fillStyle     = '#fff';
+            
+            var minTextWidth = this.measureText(min.toFixed(1) +' ['+note+']').width;
+            this.fillRect(minX-2, minY-2, minTextWidth+4, 12);
+            
+            var maxTextWidth = this.measureText(max.toFixed(1)).width;
+            this.fillRect(maxX-2, maxY-2, maxTextWidth+4, 12);
+            this.fillStyle     = '#000';
+            
+            this.fillText(min.toFixed(1)+' ['+note+']', minX, minY);
+            this.fillText(max.toFixed(1), maxX, maxY);
+        }
      });
 }
 function draw_radian_line(x, y, radian, distance, color, width) {
