@@ -322,25 +322,35 @@
 			hexes = []; // reset hexes
 		}
         // reorganize data
-        
+        console.log('los_arc_groups');
+         console.log(los_arc_groups);
+         
        for(var i = 0, len = los_arc_groups.length; i<len; i++){
            los_arc_groups[i] = {
-               min : los_arc_groups[i].min.radian,
-               max : los_arc_groups[i].max.radian
+               'min' : los_arc_groups[i].min.radian,
+               'max' : los_arc_groups[i].max.radian
            }
        }
-        
+       console.log('los_arc_groups');
+         console.log(los_arc_groups);
+ 
+       
         // array of field of view arc data
         //*
         var arr = mergeRanges(los_arc_groups);
         los_arc_groups = arr;
         //*/
+        
+        
+ 
      
         if(los_arc_groups && los_arc_groups.length > 0){
             
             for(var i = 0, len = los_arc_groups.length; i<len; i++){
-                  
-                ///*
+                   console.log('los_arc_groups');
+         console.log(los_arc_groups);
+                //*
+                
                 draw_fov(
                      origin_hex.center.x
                     ,origin_hex.center.y

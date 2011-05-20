@@ -48,23 +48,30 @@ function draw_fov(x1, y1, min, max, distance, color1, color2, drawValues,note) {
             var minX = (lblDistance * Math.cos(min)) + x1,
                 minY = (lblDistance * Math.sin(min)) + y1,
                 maxX = (lblDistance * Math.cos(max)) + x1,
-                maxY = (lblDistance * Math.sin(max)) + y1;
+                maxY = (lblDistance * Math.sin(max)) + y1,
+                minLblY = grid.container_height - (14*(Number(note)+2))+2,
+                maxLblY =  14+(14*Number(note)+1);
+                
                 
             this.fillStyle    = '#000';
             this.font         = '8px sans-serif';
             this.textBaseline = 'top';
-           
             this.fillStyle     = '#fff';
             
-            var minTextWidth = this.measureText(min.toFixed(1) +' ['+note+']').width;
-            this.fillRect(minX-2, minY-2, minTextWidth+4, 12);
+            var minTextWidth = this.measureText(min.toFixed(1) + ' ['+note+']').width;
+            var maxTextWidth = this.measureText(max.toFixed(1) + ' ['+note+']').width;
             
-            var maxTextWidth = this.measureText(max.toFixed(1)).width;
-            this.fillRect(maxX-2, maxY-2, maxTextWidth+4, 12);
+            this.fillRect(minX-2, minLblY -2 , minTextWidth+4, 12);
+            draw_line(minX,minY,minX,minLblY, 'rgba(255,255,255,.3)');
+            
+            
+            this.fillRect(maxX-2,maxLblY -2, maxTextWidth+4, 12);
+            draw_line(maxX,maxY,maxX,maxLblY, 'rgba(255,255,255,.3)');
+            
             this.fillStyle     = '#000';
             
-            this.fillText(min.toFixed(1)+' ['+note+']', minX, minY);
-            this.fillText(max.toFixed(1), maxX, maxY);
+            this.fillText(min.toFixed(1)+' ['+note+']', minX, minLblY);
+            this.fillText(max.toFixed(1)+' ['+note+']', maxX,maxLblY);
         }
      });
 }

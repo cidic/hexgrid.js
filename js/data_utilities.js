@@ -156,9 +156,10 @@
                 a_min = a.min   
             }
             
-            return a_min - b.min; 
+            return a.min - b.min; 
         
         });
+        
         //testing theory
         //ranges = [ranges[ranges.length -1]].concat(ranges);
         
@@ -182,7 +183,7 @@
         
         // fold each range in from the left, merging with the last value if they overlap
         var result = ranges.reduce(function (list, next, index) {
-             //*
+            //*
             draw_fov(
                      grid.hex(6,6).center.x
                     ,grid.hex(6,6).center.y
@@ -203,6 +204,12 @@
                   
             if (newMerge){
                 console.log('merged into { min: '+newMerge.min+', max: '+newMerge.max+'}');
+                
+                newMerge = {
+                    'min' : Number(newMerge.min),
+                    'max' : Number(newMerge.max)
+                    }
+                
                 list.splice(-1, 1, newMerge);
             }
             else {
