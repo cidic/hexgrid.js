@@ -114,8 +114,8 @@
 				if(test){
 					highlight_hex_obj(target_hex);
 				}
-                console.log(x+','+y);
-				console.log(test);
+             //   console.log(x+','+y);
+			//	console.log(test);
 			}
 		}
 	}
@@ -322,8 +322,8 @@
 			hexes = []; // reset hexes
 		}
         // reorganize data
-        console.log('los_arc_groups');
-         console.log(los_arc_groups);
+        //console.log('los_arc_groups');
+       //  console.log(los_arc_groups);
          
        for(var i = 0, len = los_arc_groups.length; i<len; i++){
            los_arc_groups[i] = {
@@ -331,8 +331,8 @@
                'max' : los_arc_groups[i].max.radian
            }
        }
-       console.log('los_arc_groups');
-         console.log(los_arc_groups);
+     //  console.log('los_arc_groups');
+     //    console.log(los_arc_groups);
  
        
         // array of field of view arc data
@@ -347,16 +347,16 @@
         if(los_arc_groups && los_arc_groups.length > 0){
             
             for(var i = 0, len = los_arc_groups.length; i<len; i++){
-                   console.log('los_arc_groups');
-         console.log(los_arc_groups);
-                //*
+                   //console.log('los_arc_groups');
+        // console.log(los_arc_groups);
+                /*
                 
                 draw_fov(
                      origin_hex.center.x
                     ,origin_hex.center.y
                     ,los_arc_groups[i].min
                     ,los_arc_groups[i].max
-                    ,(30* i) +20
+                    ,(10* i+1) +20
                     ,"rgba(50, 50,250, .15)"
                     ,"rgba(0,0,250, .9)"
                    // ,true

@@ -170,7 +170,7 @@
     hexgrid.prototype.importData = function(data) {
         this.hexes = data;
           this.eachHex(function(x,y){
-            this.set_traversal_data();
+            this.hex(x,y).set_traversal_data();
         });
     }
     var grid = new hexgrid({
@@ -184,27 +184,46 @@
   
     });
     grid.generateHexes();
-    /*
-    //grid.hex(1,6).blocksLos = true;
-    grid.hex(4,4).blocksLos = true;
-    grid.hex(2,5).blocksLos = true;
-    grid.hex(6,4).blocksLos = true;
    
-    grid.hex(0,6).blocksLos = true;
-    // grid.hex(4,6).blocksLos = true;
-  //  grid.hex(5,5).blocksLos = true;
-   *
     
     
     /*--- test case ---*/
+    /*
     grid.hex(5,5).blocksLos = true;
     
     //grid.hex(2,6).blocksLos = true;
     grid.hex(3,4).blocksLos = true;
     grid.hex(5,3).blocksLos = true;
-  
+  */
+    
+    /*--- test case ---*/
     
     
+grid.hex(0,5).blocksLos = true;
+grid.hex(0,6).blocksLos = true;
+grid.hex(1,2).blocksLos = true;
+grid.hex(1,9).blocksLos = true;
+grid.hex(2,2).blocksLos = true;
+grid.hex(2,5).blocksLos = true;
+grid.hex(2,8).blocksLos = true;
+grid.hex(3,3).blocksLos = true;
+grid.hex(3,4).blocksLos = true;
+grid.hex(4,2).blocksLos = true;
+grid.hex(4,9).blocksLos = true;
+grid.hex(5,2).blocksLos = true;
+grid.hex(5,3).blocksLos = true;
+grid.hex(5,5).blocksLos = true;
+grid.hex(5,6).blocksLos = true;
+grid.hex(5,7).blocksLos = true;
+grid.hex(6,5).blocksLos = true;
+grid.hex(6,8).blocksLos = true;
+grid.hex(6,9).blocksLos = true;
+grid.hex(7,2).blocksLos = true;
+grid.hex(8,2).blocksLos = true;
+grid.hex(8,8).blocksLos = true;
+grid.hex(8,9).blocksLos = true;
+grid.hex(9,5).blocksLos = true;
+grid.hex(9,7).blocksLos = true;
     
     //randomBlocking(25);
     

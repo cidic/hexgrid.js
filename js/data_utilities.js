@@ -41,8 +41,46 @@
 		},0);
 	}
  
+ 
+function newMergeRanges(ranges) {
+    
+    var radians = [];
+    
+    for(var i = 0, len = ranges.length; i < len; i++){
+        
+        radians.push({
+            val: ranges[i].min,
+            type: 'min'
+        });
+        radians.push({
+            val: ranges[i].max,
+            type: 'max'
+        });
+    }
+    radians.slice().sort(function(a, b){
+        return a.val - b.val;
+    });
+    
+    var result = [],
+        prevRad = null,
+        openMin = null;
+    
+    for(var i = 0,len = radians.length; i < len; i++){
+        var rad = radians[i],
+            nextRad = radians[((i+1 > radians.length)? null : i+i )],
+            isMin = (rad.type === 'min'),
+            isMax = (rad.type === 'max');
+            
+            if(isMax && openMin !== null && prevRad.type !== 'max'){
+                
+            }
+    }
+    
+
+}
+ 
     function mergeRanges(ranges) {
-      var count = ranges.length;
+        var count = ranges.length;
         console.log('---');
         function merge(r1, r2) {
             // returns whether or not two ranges overlap
@@ -53,11 +91,11 @@
                 r1Round = {
                     min: Math.round(r1.min*10)/10,
                     max: Math.round(r1.max*10)/10
-                    },
+                },
                 r2Round = {
                     min: Math.round(r2.min*10)/10,
                     max: Math.round(r2.max*10)/10
-                    },
+                },
                 result;
                 
                 //*
@@ -66,76 +104,95 @@
                 console.log('r1');
                 console.log(r1);
                 */
+                console.log('----------');
                 console.log('r1Round { min: '+r1Round.min+', max: '+r1Round.max+'}');
-                
+                console.log('--r1spansPi : '+ r1spansPi);
                 /*
                 console.log('r2');
                 console.log(r2);
                 */
                 console.log('r2Round { min: '+r2Round.min+', max: '+r2Round.max+'}');
-                
-                
-                console.log('r1spansPi : '+ r1spansPi);
-                console.log('r2spansPi : '+ r2spansPi);
+                console.log('--r2spansPi : '+ r2spansPi);
                // */
                 
-                if(
-                    !r1spansPi && !r2spansPi
-                    && 
-                    (
-                        (r1Round.max >= r2Round.min) && (r1Round.min <= r2Round.max)
-                        || 
-                        (r1Round.max >= r2Round.max) && (r1Round.min <= r2Round.min)
-                        ||
-                        (r2Round.max >= r1Round.max) && (r2Round.min <= r1Round.min)
-                    )
-                ){
+                if(!r1spansPi && !r2spansPi){
                     
-                    return {min:Math.min(r1.min, r2.min), max:Math.max(r1.max, r2.max)};
-                
+                    var basicMerge = {min:Math.min(r1.min, r2.min), max:Math.max(r1.max, r2.max)};
+                    
+                    if(r1Round.min <= r2Round.min
+                    && r2Round.min <= r1Round.max 
+                    && r1Round.max <= r2Round.max){
+                        console.log(r1Round.min+' <= '+r2Round.min+' <= '+r1Round.max+' <= '+r2Round.max);
+                        return basicMerge;
+                    }
+                    if(r2Round.min <= r1Round.min 
+                    && r1Round.min <= r2Round.max
+                    && r2Round.max <= r1Round.max){
+                        console.log(r2Round.min+' <= '+r1Round.min+' <= '+r2Round.max+' <= '+r1Round.max);
+                        return basicMerge;
+                    }
+                    // if r2 is inside r1
+                    if(r1Round.min <= r2Round.min
+                    && r2Round.min <= r2Round.max
+                    && r2Round.max <= r1Round.max){
+                        console.log('r2 is inside r1');
+                        return basicMerge;
+                    }
+                    // if r1 inside r2
+                    if(r2Round.min <= r1Round.min
+                    && r1Round.min <= r1Round.max
+                    && r1Round.max <= r2Round.max){
+                        console.log('r1 inside r2');
+                        return basicMerge;
+                    }
                 }
                 else if(r1spansPi && r2spansPi){
                     // r1.min and r2.min are both going to be positive, get the lowest
                     // r1.max and r2.max are both going to be negative, get the highest
-                    
-                    return {min:Math.max(r1.min, r2.min), max:Math.min(r1.max, r2.max)};
+                    console.log('r1spansPi && r2spansPi');
+                    return {min:Math.max(r1.min, r2.min), max:Math.max(r1.max, r2.max)};
                 }
-                else if(r1spansPi || r2spansPi){
+              /* 
+              else if(r1spansPi || r2spansPi){
                     
                     var rInside = rangesInside(r1,r2);
                     if(rInside) return rInside;   
                     
                 }
-                
+                */
                 if(r1spansPi){
                     // given r2spansPi == false
                     
-                   
-                    
-                    if(r2Round.min <= r1Round.max){
-                        if(r2Round.min <= 0 && (r1Round.min >= 0 && r2Round.max >= 0)){
-                            
-                        }
-                        return {min: r1.min, max: r2.max};    
+                    if((Math.PI *-1) <= r2Round.min
+                    && r2Round.min <= r1Round.max){
+                        console.log('(Math.PI *-1) <= r2Round.min <= r1Round.max');
+                        return {min: r1.min, max: Math.max(r2.max, r1.max)};    
                     }
-                    else if(r2Round.max >= r1Round.min){
-                        return {min: r2.min, max: r1.max};
+                    else if(r1Round.min <= r2Round.max 
+                    && r2Round.max <= Math.PI){
+                        console.log('(Math.PI *-1) <= r2Round.min <= r1Round.max');
+                        return {min: Math.min(r2.min, r1.min), max: r1.max};
                     }
                 }
                 
                 else if(r2spansPi){
                     // given r1spansPi == false
                     
-                    if(r1Round.min <= r2Round.max){
-                        return {min: r2.min, max: r1.max};    
+                    if((Math.PI *-1) <= r1Round.min
+                    && r1Round.min <= r2Round.max){
+                        console.log('(Math.PI *-1) <= r1Round.min <= r2Round.max');
+                        return {min: r2.min, max: Math.max(r1.max, r2.max)};    
                     }
-                    else if(r1Round.max >= r2Round.min){
-                        return {min: r1.min, max: r2.max};
+                    else if(r2Round.min <= r1Round.max
+                    && r1Round.max <= Math.PI){
+                        console.log('r2Round.min <= r1Round.max <= Math.PI');
+                        return {min: Math.max(r1.min, r2.min), max: Math.max(r1.max, r2.max)};
                     }
                 }
                 else {
                     
-                   
+                    console.log('no merge');
+                    
                     
                         return false;   
                     
@@ -145,24 +202,15 @@
         }
        
         // make a copy of ranges and sort by min
-        ranges = ranges.slice().sort(function (a, b) { 
-            
-            var a_min;
-            
-            if((Math.abs(a.max - a.min)) > Math.PI){
-                a_min = Math.PI * -1;       
-            }
-            else {
-                a_min = a.min   
-            }
-            
+        ranges = ranges.slice().sort(function (a, b) {     
             return a.min - b.min; 
-        
         });
         
-        //testing theory
-        //ranges = [ranges[ranges.length -1]].concat(ranges);
-        
+        var lastArc = ranges[ranges.length -1];
+        if((Math.abs(lastArc.max - lastArc.min)) > Math.PI){
+            ranges = [lastArc].concat(ranges);
+            ranges.pop();
+        }
         console.log('ranges before merge');
         console.log(ranges);
         
@@ -172,24 +220,26 @@
                     ,grid.hex(6,6).center.y
                     ,ranges[0].min
                     ,ranges[0].max
-                    ,60
+                    ,80
                     ,"rgba(250, 50,50, .15)"
                     ,"rgba(250, 50,50, .9)"
                     ,true
                     ,'-1'
-                    );
+                );
        // */
         //ranges.push(ranges[ranges.length -1]);
         
         // fold each range in from the left, merging with the last value if they overlap
+        var count = 1;
         var result = ranges.reduce(function (list, next, index) {
             //*
+            count++;
             draw_fov(
                      grid.hex(6,6).center.x
                     ,grid.hex(6,6).center.y
                     ,next.min
                     ,next.max
-                    ,(60*index) +80
+                    ,(10*count) +80
                     ,"rgba(250, 50,50, .15)"
                     ,"rgba(250, 50,50, .9)"
                     ,true
@@ -200,8 +250,6 @@
             var last = list[list.length - 1],
                 newMerge = merge(last,next);
                 
-                
-                  
             if (newMerge){
                 console.log('merged into { min: '+newMerge.min+', max: '+newMerge.max+'}');
                 
@@ -218,6 +266,19 @@
            
             return list;
         }, ranges.splice(0, 1));
+        
+        var lastMerge = merge(result[0],result[result.length-1]);
+        if(lastMerge){
+            lastMerge = {
+                    'min' : Number(lastMerge.min),
+                    'max' : Number(lastMerge.max)
+                    }
+            result.pop();
+            result.shift();
+            result.push(lastMerge);
+            
+               
+        }
         
        //*
         console.log('ranges after merge');
@@ -279,79 +340,3 @@
         return false;
     }
     
-    function merge2(ranges){
-		// hex1: origin
-		// hex2: target hex
-		// arc_group
-        
-        if(ranges.length < 1) return ranges;
-        
-        console.log('before merge');
-        console.log(ranges);
-        function overlaps(arc1,arc2){
-            var precision = 6,
-                a1= arc1.min.toFixed(precision),
-			    a2 = arc1.max.toFixed(precision),
-		        b1 = arc2.min.toFixed(precision),
-        		b2 = arc2.max.toFixed(precision),
-                aCrossesZero = ((Math.abs(a2 - a1)) > Math.PI),
-                bCrossesZero = ((Math.abs(b2 - b1)) > Math.PI),
-                // using cyclic permutations to test the order of the arcs
-		    	// testArr : this is the order we want to see the radians in for the hex to be inside the arc
-                testArr = [
-                    [a1,b1,a2,b2],
-                    [b1,a1,b2,a2],
-                    [a1,b1,b2,a2],
-                    [b1,a1,a2,b2]
-                ],
-                _min,
-                _max;
-                
-            for(var i = 0; i<testArr.length; i++){
-                var testString = testArr[i].concat(testArr[i]).join(''),
-                    testString2 = testArr[i].sort(function(a,b){return a - b; }).join('');
-                    
-                if(testString.indexOf(testString2) != -1) {
-                    
-                    if(aCrossesZero || bCrossesZero){
-                        if(Math.abs(a1) >= Math.abs(b1)){
-                            _min = a1; 
-                        }
-                        else {
-                            _min = b1;   
-                        }
-                       
-                        if(Math.abs(a2) >= Math.abs(b2)){
-                            _max = a2;
-                        }
-                        else {
-                            _max = b2;
-                        }
-                        
-                        return { min : _min, max : _max}
-                        
-                    }
-                    return { min : Math.min.apply(null, testArr[i]), max : Math.max.apply(null, testArr[i]) }
-                }
-            }
-            return false;
-        }
-        // make a copy of ranges and sort by min
-        ranges = ranges.slice().sort(function (a, b) { return a.min - b.min; });
-
-        var result = ranges.reduce(function (list, next) {
-            var last = list[list.length - 1],
-                newMerge = overlaps(last, next);
-            
-            console.log(newMerge);
-            
-            if (newMerge) list.splice(-1, 1, newMerge);
-            else list.push(next);
-            return list;
-        }, ranges.splice(0, 1));
-        
-        console.log('after merge');
-        console.log(ranges);
-        
-        return result;
-    }

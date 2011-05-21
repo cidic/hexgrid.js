@@ -58,8 +58,8 @@ function draw_fov(x1, y1, min, max, distance, color1, color2, drawValues,note) {
             this.textBaseline = 'top';
             this.fillStyle     = '#fff';
             
-            var minTextWidth = this.measureText(min.toFixed(1) + ' ['+note+']').width;
-            var maxTextWidth = this.measureText(max.toFixed(1) + ' ['+note+']').width;
+            var minTextWidth = this.measureText(min.toFixed(1) + ' ['+note+'] min').width;
+            var maxTextWidth = this.measureText(max.toFixed(1) + ' ['+note+'] max').width;
             
             this.fillRect(minX-2, minLblY -2 , minTextWidth+4, 12);
             draw_line(minX,minY,minX,minLblY, 'rgba(255,255,255,.3)');
@@ -70,8 +70,8 @@ function draw_fov(x1, y1, min, max, distance, color1, color2, drawValues,note) {
             
             this.fillStyle     = '#000';
             
-            this.fillText(min.toFixed(1)+' ['+note+']', minX, minLblY);
-            this.fillText(max.toFixed(1)+' ['+note+']', maxX,maxLblY);
+            this.fillText(min.toFixed(1)+' ['+note+'] min', minX, minLblY);
+            this.fillText(max.toFixed(1)+' ['+note+'] max', maxX,maxLblY);
         }
      });
 }
