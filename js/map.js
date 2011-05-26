@@ -1,5 +1,5 @@
 
-    var zxc = document.getElementById('canvas');
+   
     
     function hexgrid(args){
         
@@ -13,23 +13,45 @@
 		
         this.hex_corner_offset = args.hex_corner_offset;
 		this.map_pixel_height = this.hex_height * this.mapsize_y;
-		this.container_width = this.hex_width * this.mapsize_y + (this.hex_height/2);
-		this.container_height = this.hex_height * this.mapsize_y + (this.hex_height/2) + 2;
+		this.container_width = ((this.hex_width - this.hex_corner_offset ) * this.mapsize_x) + this.hex_corner_offset;
+		this.container_height = (this.hex_height * this.mapsize_y) + (this.hex_height/2);
         
-        this._canvasId = args.canvas;
+        console.log(this.mapsize_x);
         
-       var xthis = this;
-       $(function(){
-            xthis.canvas = $('#'+ xthis._canvasId);
-       });
-       
-     
+        var xthis = this;
+        
+        $(function(){
+           
+
+            xthis.container = document.getElementById(args.containerId);
+            xthis.canvas = document.getElementById(args.canvasId);
+           
+            
+            //*
+            $('#map').width(xthis.container_width);
+            $('#map').height(xthis.container_height);
+            $(xthis.canvas).attr('width', xthis.container_width).width(xthis.container_width);
+            $(xthis.canvas).attr('height', xthis.container_height).height(xthis.container_height);
+//*/
+            
+             xthis.generateHexes();
+             xthis.container.innerHTML=xthis.markup;
+            xthis.eachHex(function(x,y){
+                this.set_hex_arc_data();
+                this.set_traversal_data();
+            });
+            
+            
+        });
+        
+        
         this.getCtx = function(){
-                            return (this.canvas[0].getContext)? this.canvas[0].getContext('2d') : null;
+                            
+                            return (this.canvas.getContext)? this.canvas.getContext('2d') : null;
                         };
         this.draw = function(drawFunction){
-            if(this.canvas[0].getContext){
-                var ctx = this.canvas[0].getContext('2d');
+            if(this.canvas && this.canvas.getContext){
+                var ctx = this.canvas.getContext('2d');
                 drawFunction.apply(ctx);
             }
         }
@@ -113,7 +135,7 @@
                         ,center_x : (hex_x + (this.hex_width/2))
         				,center_y : (hex_y + (this.hex_height/2))
         						
-                        ,hexgrid : grid
+                        ,hexgrid : this
                         ,color : 'green'
                         ,corners : [
                             {   x : hex_x, 
@@ -153,16 +175,10 @@
                 z_index--;
 		    }
         }
-        
-    
-        this.eachHex(function(x,y){
-            this.set_hex_arc_data();
-            this.set_traversal_data();
-        });
-        
-       
         this.markup = map_markup;
         
+     
+     
     }
      hexgrid.prototype.exportData = function() {
         return JSON.stringify(grid.hexes,function(k,v){return((k==='get_adjacent' || k==='hexgrid' || k==='get_n_hex' || k==='get_ne_hex' || k==='get_nw_hex' || k==='get_s_hex' || k ==='get_se_hex' || k==='get_se_hex' || k==='get_sw_hex')?undefined:v);});
@@ -173,81 +189,15 @@
             this.hex(x,y).set_traversal_data();
         });
     }
-    var grid = new hexgrid({
-         mapsize_x : 10
-        ,mapsize_y : 10
-        ,hex_width : 30
-        ,hex_height : 26
-        ,hex_corner_offset : 8
-        ,canvas : 'canvas'
-        
-  
-    });
-    grid.generateHexes();
-   
-    
-    
-    /*--- test case ---*/
-    /*
-    grid.hex(5,5).blocksLos = true;
-    
-    //grid.hex(2,6).blocksLos = true;
-    grid.hex(3,4).blocksLos = true;
-    grid.hex(5,3).blocksLos = true;
-  */
-    
-    /*--- test case ---*/
-    
-    
-grid.hex(0,5).blocksLos = true;
-grid.hex(0,6).blocksLos = true;
-grid.hex(1,2).blocksLos = true;
-grid.hex(1,9).blocksLos = true;
-grid.hex(2,2).blocksLos = true;
-grid.hex(2,5).blocksLos = true;
-grid.hex(2,8).blocksLos = true;
-grid.hex(3,3).blocksLos = true;
-grid.hex(3,4).blocksLos = true;
-grid.hex(4,2).blocksLos = true;
-grid.hex(4,9).blocksLos = true;
-grid.hex(5,2).blocksLos = true;
-grid.hex(5,3).blocksLos = true;
-grid.hex(5,5).blocksLos = true;
-grid.hex(5,6).blocksLos = true;
-grid.hex(5,7).blocksLos = true;
-grid.hex(6,5).blocksLos = true;
-grid.hex(6,8).blocksLos = true;
-grid.hex(6,9).blocksLos = true;
-grid.hex(7,2).blocksLos = true;
-grid.hex(8,2).blocksLos = true;
-grid.hex(8,8).blocksLos = true;
-grid.hex(8,9).blocksLos = true;
-grid.hex(9,5).blocksLos = true;
-grid.hex(9,7).blocksLos = true;
-    
-    //randomBlocking(25);
-    
-    function randomBlocking(hexesToBlock){
-        
-        for(var i = 0; i<hexesToBlock; i++){
-            var rX = Math.floor(Math.random() * grid.mapsize_x), 
-                rY = Math.floor(Math.random() * grid.mapsize_y);
-            grid.hex(rX,rY).blocksLos = true;
+    hexgrid.prototype.randomBlocking = function(hexesToBlock){
+            for(var i = 0; i<hexesToBlock; i++){
+                var rX = Math.floor(Math.random() * this.mapsize_x), 
+                    rY = Math.floor(Math.random() * this.mapsize_y);
+                    
+                    
+                    
+                this.hex(rX,rY).blocksLos = true;
+            }
         }
-     
-     
-    }
-    
-    $(function(){
-        $('#map').html(grid.markup);
-    
-        $('.container #map, .container')
-            .width(grid.container_width)
-            .height(grid.container_height)
-		;
-		$('#canvas')
-			.attr('width', grid.container_width)
-			.attr('height', grid.container_height)
-		;
-        
-    });
+ 
+   

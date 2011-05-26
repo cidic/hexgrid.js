@@ -211,6 +211,7 @@ function math_stuff(){
 				console.log('_y : '+ _y);
 
 	}
+    /*
     $(function() {
     $('#btn_array_space').bind('click', function(e) {
 		e.preventDefault();
@@ -248,3 +249,5 @@ function math_stuff(){
 	});
 
 });
+
+*/

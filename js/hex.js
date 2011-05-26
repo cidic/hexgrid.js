@@ -47,6 +47,7 @@
             ,this.get_sw_hex
             ].filter(function(val) { return val !== false; });
            
+        
             
       
     }
@@ -72,7 +73,8 @@
      
     hex.prototype.setColor = function(color){
         var color = color || 'blue',
-		    $target = $('#'+this.x+'-'+this.y+' div');
+            $target = $('#'+this.x+'-'+this.y+ ' div');            
+            
         this.color = color;
 		$target.attr('class','hex '+color);
 	}

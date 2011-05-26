@@ -41,42 +41,135 @@
 		},0);
 	}
  
+ function mergeAngleRanges (ranges) {
+    const TWO_PI = 2 * Math.PI;
+    const DELTA = Math.PI / 100 // maximum tolerance in radians of gap between overlapping edges.
+    
+    function normAngle (angle) {
+        // returns an equivalent angle in (-pi, pi]
+        while (angle <= -Math.PI) angle += TWO_PI;
+        while (angle > Math.PI) angle -= TWO_PI;
+        return angle;
+    }
+    
+    function normMin (range) {
+        // returns an equivalent range such that min is in (-pi, pi] and 0 < (max - min) <= 2pi
+        range = {min:normAngle(range.min), max:range.max};
+        while (range.max <= range.min) range.max += TWO_PI;
+        while ((range.max - range.min) > TWO_PI) range.max -= TWO_PI;
+        return range;
+    }
+    
+    function normMax (range) {
+        // returns an equivalent range such that max is in (-pi, pi] and 0 < (max - min) <= 2pi
+        range = {min:range.min, max:normAngle(range.max)};
+        while (range.max <= range.min) range.min -= TWO_PI;
+        while ((range.max - range.min) > TWO_PI) range.min += TWO_PI;
+        return range;
+    }
+    
+    function normRange (range) {
+        // returns an equivalent range with both angles in (-pi, pi]
+        return {min:normAngle(range.min), max:normAngle(range.max)};
+    }
+    
+    function merge (range1, range2) {
+        // returns the union of two ranges if they overlap, or null if they do not.
+        return ((range1.max >= (range2.min - DELTA)) && (range1.min <= (range2.max + DELTA)))
+            ? {min:Math.min(range1.min, range2.min), max:Math.max(range1.max, range2.max)} : null;
+    }
+    
+    // make a copy of ranges and sort by min
+    ranges = ranges.slice().sort(function (a, b) { return a.min - b.min; }); 
+   
+    // for each range with straddles pi, split into two ranges: one adjusted using normMin (left in
+    // place) and one adjusted using normMax (prepended to the list, preserving sortedness), so that
+    // ranges straddling pi can merge with other ranges from sides of the boundary.
+    var prepend = [];
+    ranges = prepend.concat(ranges.map(function (range) {
+        if (range.max <= range.min) {
+            prepend.push(normMax(range));
+            return normMin(range);
+        } else return range;
+    }));
+    
+    // fold each range in from the left, merging with the last value if they overlap
+    var merged, last;
+    ranges = ranges.reduce(function (list, next) {
+        last = list[list.length - 1];
+        if ((merged = merge(last, next)) !== null) list.splice(-1, 1, merged)
+        else list.push(next);
+        return list;
+    }, ranges.splice(0, 1));
+    
+    var first = ranges[0], last = ranges.slice(-1)[0];
+    
+    // check if the result is a full circle
+    if ((first === last) && ((first.max - first.min) >= (TWO_PI - DELTA))) return [{min:0, max:0}];
+    
+    if ((merged = merge(normMin(first), normMin(last))) !== null) {
+        // the first and last ranges overlap; merge them
+        ranges.shift();
+        ranges.splice(-1, 1, normRange(merged));
+    } else {
+        // the first and last ranges do not overlap; just normalise them
+        ranges[0] = normRange(first);
+        ranges.splice(-1, 1, normRange(last));
+    }
+    
+    return ranges;
+}
  
-function newMergeRanges(ranges) {
+function mergeArcRanges(ranges) {
     
-    var radians = [];
-    
-    for(var i = 0, len = ranges.length; i < len; i++){
-        
-        radians.push({
-            val: ranges[i].min,
-            type: 'min'
-        });
-        radians.push({
-            val: ranges[i].max,
-            type: 'max'
-        });
+    function normalise (range) {
+        // adjust an angle range so that max is in (-pi, pi]
+        return (range.max > Math.PI) ? {min:range.min, max:range.max - 2*Math.PI} : range;
     }
-    radians.slice().sort(function(a, b){
-        return a.val - b.val;
+    function linearise (range) {
+        // adjust an angle range so that max >= min
+        return (range.max < range.min) ? {min:range.min, max:range.max + 2*Math.PI} : range;
+    }
+    function merge (range1, range2) {
+        // returns the union of two ranges if they overlap, or null if they do not.
+        range1 = linearise(range1); range2 = linearise(range2);
+        if ((range1.max >= range2.min) && (range1.min <= range2.max)) 
+            return normalise({ min:Math.min(range1.min, range2.min),
+                               max:Math.max(range1.max, range2.max)});                     
+        return null;
+    }
+    // make a copy of ranges and sort by min
+    ranges = ranges.slice().sort(function (a, b) { return a.min - b.min; });
+    
+    console.log('data after sorting');
+        console.log(ranges);
+  
+    
+    var boundarySplittingArcs = ranges.filter(function(el){
+        return (el.max <= el.min);
     });
+    ranges = boundarySplittingArcs.concat(ranges);
     
-    var result = [],
-        prevRad = null,
-        openMin = null;
+    console.log('data after re-adding crossing arcs');
+    console.log(ranges);
     
-    for(var i = 0,len = radians.length; i < len; i++){
-        var rad = radians[i],
-            nextRad = radians[((i+1 > radians.length)? null : i+i )],
-            isMin = (rad.type === 'min'),
-            isMax = (rad.type === 'max');
-            
-            if(isMax && openMin !== null && prevRad.type !== 'max'){
-                
-            }
+    // what I would do is sort it first, then go through the resulting array and determine all of the ranges which straddle the boundary, then (after that loop is finished) prepend the appropriate values to the ranges array
+    // fold each range in from the left, merging with the last value if they overlap
+    var merged, last;
+    ranges = ranges.reduce(function (list, next) {
+        last = list[list.length - 1];
+        if ((merged = merge(last, next)) !== null) list.splice(-1, 1, merged)
+        else list.push(next);
+        return list;
+    }, ranges.splice(0, 1));
+
+    // finally, check if the first and last ranges overlap over the boundary
+    if ((merged = merge(ranges[0], ranges[ranges.length - 1])) !== null) {
+        ranges.shift();
+        ranges.splice(-1, 1, merged);
     }
     
-
+    return ranges;
 }
  
     function mergeRanges(ranges) {
@@ -86,8 +179,8 @@ function newMergeRanges(ranges) {
             // returns whether or not two ranges overlap
             // range spans pi if min and max ar on opposite sides of where -PI meets PI
             
-            var r1spansPi = ((Math.abs(r1.max - r1.min)) > Math.PI),
-                r2spansPi = ((Math.abs(r2.max - r2.min)) > Math.PI),
+            var r1spansPi = (r1.max <= r1.min),
+                r2spansPi = (r2.max <= r2.min),
                 r1Round = {
                     min: Math.round(r1.min*10)/10,
                     max: Math.round(r1.max*10)/10
