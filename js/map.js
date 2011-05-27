@@ -16,7 +16,7 @@
 		this.container_width = ((this.hex_width - this.hex_corner_offset ) * this.mapsize_x) + this.hex_corner_offset;
 		this.container_height = (this.hex_height * this.mapsize_y) + (this.hex_height/2);
         
-        console.log(this.mapsize_x);
+        
         
         var xthis = this;
         

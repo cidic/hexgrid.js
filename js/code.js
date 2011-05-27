@@ -290,7 +290,7 @@
 			if(blocks){ hex.setColor('blue'); }
 			return blocks;
 		}
-		var origin_hex = grid.hex(6,6),
+		var origin_hex = grid.hex(7,7),
 			loop_radius = 1,
 			max_loop_radius = 3,
 			los_arc_groups = [];
@@ -372,7 +372,7 @@
         });
        // grid.generateHexes();
    
-        console.log(grid.hex(0,0));
+    
        
         grid.hex(4,1).blocksLos = true;
        

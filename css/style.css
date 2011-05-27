@@ -12,6 +12,7 @@
 			margin: 0 auto;
 			position:absolute;
 			z-index: 10;
+                border: 1px solid #808080;
 		}
 		.canvas {
 			margin: 0 auto;
