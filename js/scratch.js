@@ -118,3 +118,103 @@ t = arctan(AB.y/AB.x) // Use Math.atan2(AB.y, AB.x) if coding in Flash
 C.x = d * cos(w+t) + A.x // x-component
 C.y = d * sin(w+t) + A.y // y-component
     */
+
+
+function math_stuff(){
+    var x1 = 75,
+    	y1 = 75,
+		
+		x2 = 120,
+		y2 = 180,
+	
+		x = x2 - x1,
+		y = y2 - y1,
+		
+		distance = Math.sqrt(x * x + y * y),
+		radian = Math.atan2(y, x),
+		degree = radian * 180 / Math.PI, //confirmed correct
+		//slope = (x1 - x2) / (y1 - y2),	
+		slope = (y2 - y1) / (x2 - x1),
+		yintercept = y1 - slope * x1,
+		
+		//convert back to cartesian coords
+		_x = x1 + distance * Math.cos(radian),
+		_y = y1 + distance * Math.sin(radian);
+
+
+
+		var counterclockwise = false,
+		 	start_angle = 1.5 * Math.PI,
+		 	canvas = document.getElementById('canvas');
+
+		if (canvas.getContext){
+		    var ctx = canvas.getContext('2d');
+		//	ctx.translate(0, canvas.height);
+		 //	ctx.scale(1, -1);
+		
+			// ctx.beginPath();
+			// 			ctx.arc(x1, y1, 60, start_angle,start_angle + degree,counterclockwise);
+			// 			ctx.lineWidth = 5;
+			// 			ctx.strokeStyle = "black";
+			// 			ctx.stroke();
+			// 			ctx.closePath();	
+			// 		
+			draw_line(x1, y1, x2, y2, 'black');
+			draw_line(x1, y1, _x, _y, 'blue');
+			
+			var x3 = 300,
+				y3 = slope * x3 + yintercept;
+				
+			draw_line(x1, y1, x3, y3, 'red');
+			
+		}
+				console.log('distance : '+ distance);
+				console.log('radian : '+ radian);
+				console.log('degree : '+ degree);
+				console.log('slope : '+ slope);
+				console.log('yintercept : '+ yintercept);
+
+				console.log('_x : '+ _x);
+				console.log('_y : '+ _y);
+
+	}
+    /*
+    $(function() {
+    $('#btn_array_space').bind('click', function(e) {
+		e.preventDefault();
+		var input = $('#array_space').val(),
+			input_data = input.split(','),
+			x = Number(input_data[0]),
+			y = Number(input_data[1]),
+			result = array_to_hex([x,y]).join(',');
+			
+			console.log('result : '+result);
+			$('#info').html(result);					
+		
+	});
+	$('#btn_hex_space').bind('click', function(e) {
+		e.preventDefault();
+		var input = $('#hex_space').val(),
+			input_data = input.split(','),
+			x = Number(input_data[0]),
+			y = Number(input_data[1]),
+			
+			result = hex_to_array([x,y]).join(',');
+			
+			console.log('result : '+result);
+			$('#info').html(result);					
+		
+	});
+	
+	$('.hex-wrap').live('click', function(){
+		$(this).children().toggleClass('blue');//.attr('class', 'hex blue');
+	});
+	
+	$('#btn_toggle_canvas').click(function(){
+		$('#canvas').toggle();
+		return false;
+	});
+
+});
+
+*/
