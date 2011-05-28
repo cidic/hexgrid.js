@@ -24,7 +24,6 @@
             for(var i =0,len = this.blockingHexes.length; i <len; i++){
                 var _x = this.blockingHexes[i].x,
                     _y = this.blockingHexes[i].y;
-                    console.log(this.hex(_x,_y));                           
                     this.hex(_x,_y).blocksLos = true;
             }
         }

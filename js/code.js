@@ -9,7 +9,7 @@
 			origin_x = hex.x,
 			origin_y = hex.y,
             _x = origin_x,
-            _y = origin_y - 1,
+            _y = origin_y - distance,
 			next = grid.hex(origin_x, origin_y - distance),
             result = [];
         
@@ -28,19 +28,18 @@
             ,n_hex 
             ,ne_hex
         ];
-	    
+	   
         for(var d = 0; d < 6; d++){ 
+            
             for(var i = 0; i < distance; i++){	
-                
-                
                 // if hex exists
-                if(next) {
-
+              //  if(next) {
                     result.push(next);
-                }
+            //    }
 			
             
             var next_coords = directions[d](_x,_y);
+         
             _x = next_coords.x;
             _y = next_coords.y;
             
@@ -188,7 +187,7 @@
 			
 	}
 	
-    function get_los_blocking_hex_groups(hexes, validateFunc, los_arc_groups) {
+    function get_los_blocking_hex_groups(hexes, validateFunc) {
         // TODO consider filtering out hexes already out of los as per los_arc_groups
 		// creates an array of los blocking arcs from hexes in the loop with properties that block los
 
@@ -283,18 +282,18 @@
 	}
 	
 	function los_tester(){
-		console.log('x');
-        console.log(grid.hex(4,1).blocksLos);
+	
+    
 		function blocks_los(hex){
-			var blocks = (hex.blocksLos)? true : false;
+			var blocks = !!hex.blocksLos;
 			if(blocks){ hex.setColor('blue'); }
 			return blocks;
 		}
-		var origin_hex = grid.hex(7,7),
+		var origin_hex = grid.hex(5,5),
 			loop_radius = 1,
 			max_loop_radius = 3,
 			los_arc_groups = [];
-           
+           origin_hex.setColor('yellow');
 			
 		for(var r = loop_radius; r <= max_loop_radius; r++){
             loop_radius = r;
@@ -303,8 +302,19 @@
 		    // if there are already los_arc_groups
 		    var hidden_hexes = [];
 		    // array of los blocking hex groups, needs full hex loop
-            var blocking_hex_groups = get_los_blocking_hex_groups(loop_hexes, blocks_los, los_arc_groups); 
+            var blocking_hex_groups = get_los_blocking_hex_groups(loop_hexes, blocks_los); 
             // array of los blocking hex groups from latest hex loop
+            
+            //console.log('--- blocking group : '+loop_radius); 
+            
+            var test_blockingHexes = loop_hexes.filter(function(el){
+                
+                    return el.blocksLos;
+                });
+            
+            
+           // console.log(test_blockingHexes);
+           //console.log(loop_hexes);
             var new_los_arc_groups = get_los_arc_groups(origin_hex, blocking_hex_groups);
             
 			// array of field of view arc data
@@ -341,6 +351,7 @@
                 }
             }
 			hexes = []; // reset hexes
+            
 		}
         if(los_arc_groups  && los_arc_groups.length > 0) {
             
@@ -381,8 +392,10 @@
             ,canvasId : 'canvas'
             ,containerId : 'map'
             ,blockingHexes : [
-                {x : 7, y: 4},
-                {x : 5, y : 6}
+                {x : 4, y : 5},
+                {x : 5, y : 4},
+                {x : 7, y : 5},
+                {x : 6, y : 7}
                 
                 ]
         });
