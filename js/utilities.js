@@ -1,7 +1,6 @@
-
 /*--- draw tools ---*/
 function draw_line(x1, y1, x2, y2, color, width) {    
-    	//checks if line crosses hex
+        //checks if line crosses hex
         
         
         
