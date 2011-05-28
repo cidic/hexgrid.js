@@ -18,75 +18,70 @@
 
         this.blockingHexes = args.blockingHexes;
         
-        var xthis = this;
+        this.generateHexes();
         
-        $(function(){
-            xthis.generateHexes();
-
-            
-            
-        
-            
-            xthis.container = document.getElementById(args.containerId);
-            xthis.canvas = document.getElementById(args.canvasId);
-            
-            xthis.container.innerHTML=xthis.markup;
-            if(xthis.blockingHexes.length > 0){
-                for(var i =0,len = xthis.blockingHexes.length; i <len; i++){
-                    var _x = xthis.blockingHexes[i].x,
-                        _y = xthis.blockingHexes[i].y;
-                        console.log(xthis.hex(_x,_y));                           
-                        xthis.hex(_x,_y).blocksLos = true;
-                }
+        if(this.blockingHexes.length > 0){
+            for(var i =0,len = this.blockingHexes.length; i <len; i++){
+                var _x = this.blockingHexes[i].x,
+                    _y = this.blockingHexes[i].y;
+                    console.log(this.hex(_x,_y));                           
+                    this.hex(_x,_y).blocksLos = true;
             }
-            
-            
-            xthis.eachHex(function(x,y){
-                this.set_hex_arc_data();
-                this.set_traversal_data();
-                
-                
-                
-            });
-            
-           
-            
-            $(xthis.canvas).width(xthis.container_width);
-            $(xthis.canvas).height(xthis.container_height);
-            $(xthis.container).width(xthis.container_width);
-            $(xthis.container).height(xthis.container_height);
-           
-        });
+        }
+
+        this.getCtx = function(){                
+            return (this.canvas.getContext)? this.canvas.getContext('2d') : null;
+        };
         
-        
-        this.getCtx = function(){
-                            
-                            return (this.canvas.getContext)? this.canvas.getContext('2d') : null;
-                        };
         this.draw = function(drawFunction){
             if(this.canvas && this.canvas.getContext){
                 var ctx = this.canvas.getContext('2d');
                 drawFunction.apply(ctx);
             }
         }
+        
+        $($.proxy(function(){
+            
+            this.container = document.getElementById(args.containerId);
+            this.canvas = document.getElementById(args.canvasId);
+            
+            this.container.innerHTML = this.markup;
+            
+            this.eachHex(function(x,y){
+                this.set_hex_arc_data();
+                this.set_traversal_data();
+                
+            });
+            
+            $(this.canvas).width(this.container_width);
+            $(this.canvas).height(this.container_height);
+            $(this.container).width(this.container_width);
+            $(this.container).height(this.container_height);
+
+      	los_tester();
+        }, this));
+        
+        
                 
 
-        this.markup = '';
-        this.hex = function (x,y){
-            if(
-                this.hexes[x] !== undefined
-            &&  this.hexes[x] !== null
-            &&  this.hexes[x][y] !== undefined
-            &&  this.hexes[x][y] !== null
-            )
-            {
-                return this.hexes[x][y];
-            }
-            else {
-                return false;   
-            }
-        };
+        
+        
     }
+    hexgrid.prototype.hex = function (x,y){
+        if(
+            this.hexes[x] !== undefined
+        &&  this.hexes[x] !== null
+        &&  this.hexes[x][y] !== undefined
+        &&  this.hexes[x][y] !== null
+        )
+        {
+            return this.hexes[x][y];
+        }
+        else {
+            return false;   
+        }
+    };
+    
     hexgrid.prototype.eachHex = function(func){
         for (var x=0; x < this.mapsize_x; x++) {
 			for (var y=0; y < this.mapsize_y; y++) { 
@@ -181,7 +176,7 @@
                this.hexes[x][y] = new hex(hex_args);
 
 
-                map_markup +='<div id="'+ x + '-' + y +'" class="hex-wrap hex array_space_'+x+'_'+y+'" style="position:absolute;z-index:'+ hex_y +';left:' + hex_x + 'px;top:' + ( hex_y) + 'px;">';
+                map_markup +='<div id="'+ x + '-' + y +'" class="hex-wrap hex array_space_'+x+'_'+y+'" style="position:absolute;z-index:'+ hex_y +';left:' + hex_x + 'px;top:' +  hex_y + 'px;">';
                 map_markup +='<div class="hex green">';						
                 map_markup +='<span style="position:absolute;left:10px;top:5px;">'+x+','+y+'</span>';
                 map_markup +='</div></div>';

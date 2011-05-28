@@ -283,7 +283,7 @@
 	}
 	
 	function los_tester(){
-		
+		console.log('x');
 		function blocks_los(hex){
 			var blocks = (hex.blocksLos)? true : false;
 			if(blocks){ hex.setColor('blue'); }
@@ -369,8 +369,6 @@
         }
     }
 
-    
-   
     var grid = new hexgrid({
              mapsize_x : 10
             ,mapsize_y : 10
@@ -385,16 +383,13 @@
                 
                 ]
         });
-       // grid.generateHexes();
-   
-    
+     
        
      
   
 	$(function(){
-	  
-        //grid.randomBlocking(25);
-		los_tester();		
+        
+        	
 	
     		
 	});
