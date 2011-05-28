@@ -355,7 +355,8 @@
 	function draw_fov_arcs(origin_hex, los_arc_groups){
         if(los_arc_groups && los_arc_groups.length > 0){
             for(var i = 0, len = los_arc_groups.length; i<len; i++){
-                
+             
+             /*
                 draw_fov(
                      origin_hex.center.x
                     ,origin_hex.center.y
@@ -366,6 +367,7 @@
                     ,"rgba(0,0,250, .9)"
                    // ,true
                 );  
+                */
             }
         }
     }
