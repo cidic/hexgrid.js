@@ -50,7 +50,7 @@
             $(this.container).width(this.container_width);
             $(this.container).height(this.container_height);
             
-        	los_tester();
+        	
         }, this));
         
         

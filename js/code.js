@@ -392,7 +392,7 @@
   
 	$(function(){
         
-        	
+        los_tester();	
 	
     		
 	});
