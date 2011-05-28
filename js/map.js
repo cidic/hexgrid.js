@@ -29,16 +29,7 @@
             }
         }
 
-        this.getCtx = function(){                
-            return (this.canvas.getContext)? this.canvas.getContext('2d') : null;
-        };
-        
-        this.draw = function(drawFunction){
-            if(this.canvas && this.canvas.getContext){
-                var ctx = this.canvas.getContext('2d');
-                drawFunction.apply(ctx);
-            }
-        }
+    
         
         $($.proxy(function(){
             
@@ -53,16 +44,26 @@
                 
             });
             
-            $(this.canvas).width(this.container_width);
-            $(this.canvas).height(this.container_height);
+            
+            $(this.canvas).attr('width',this.container_width);
+            $(this.canvas).attr('height',this.container_height);
             $(this.container).width(this.container_width);
             $(this.container).height(this.container_height);
-
-      	los_tester();
+            
+        	los_tester();
         }, this));
         
         
-                
+        this.getCtx = function(){                
+            return (this.canvas.getContext)? this.canvas.getContext('2d') : null;
+        };
+        
+        this.draw = function(drawFunction){
+            if(this.canvas && this.canvas.getContext){
+                var ctx = this.canvas.getContext('2d');
+                drawFunction.apply(ctx);
+            }
+        } 
 
         
         

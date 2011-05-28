@@ -284,6 +284,7 @@
 	
 	function los_tester(){
 		console.log('x');
+        console.log(grid.hex(4,1).blocksLos);
 		function blocks_los(hex){
 			var blocks = (hex.blocksLos)? true : false;
 			if(blocks){ hex.setColor('blue'); }
@@ -378,7 +379,7 @@
             ,canvasId : 'canvas'
             ,containerId : 'map'
             ,blockingHexes : [
-                {x : 4, y: 1},
+                {x : 7, y: 4},
                 {x : 5, y : 6}
                 
                 ]
