@@ -326,6 +326,17 @@
                             
                         }
                     }
+                    
+                    draw_fov2(
+                     origin_hex.center.x
+                    ,origin_hex.center.y
+                    ,los_arc_groups[j].min
+                    ,los_arc_groups[j].max
+                    ,loop_radius
+                    ,"rgba(50, 50,250, .15)"
+                    ,"rgba(0,0,250, .9)"
+                   // ,true
+                );
                 }
             }
 			hexes = []; // reset hexes
@@ -368,17 +379,21 @@
             ,hex_corner_offset : 8
             ,canvasId : 'canvas'
             ,containerId : 'map'
+            ,blockingHexes : [
+                {x : 4, y: 1},
+                {x : 5, y : 6}
+                
+                ]
         });
        // grid.generateHexes();
    
     
        
-        grid.hex(4,1).blocksLos = true;
-       
+     
   
 	$(function(){
-	   
- grid.randomBlocking(25);
+	  
+        //grid.randomBlocking(25);
 		los_tester();		
 	
     		

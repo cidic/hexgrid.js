@@ -22,7 +22,7 @@ function draw_line(x1, y1, x2, y2, color, width) {
 
 function draw_fov2(x1, y1, min, max, distance, color1, color2) {
    // min,max = radian values
-    var distance = distance || 50,
+    var distance = distance*grid.hex_width || 50,
         color1 = color1 || "rgba(255, 50,50, .15)",
         color2 = color2 || "rgba(255, 50,50, .8)",
         drawValues = drawValues || false;

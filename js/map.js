@@ -13,35 +13,49 @@
 		
         this.hex_corner_offset = args.hex_corner_offset;
 		this.map_pixel_height = this.hex_height * this.mapsize_y;
-		this.container_width = ((this.hex_width - this.hex_corner_offset ) * this.mapsize_x) + this.hex_corner_offset;
-		this.container_height = (this.hex_height * this.mapsize_y) + (this.hex_height/2);
-        
-        
+		this.container_width = this.hex_width * this.mapsize_y + (this.hex_height/2);
+		this.container_height = this.hex_height * this.mapsize_y + (this.hex_height/2) + 2;
+
+        this.blockingHexes = args.blockingHexes;
         
         var xthis = this;
         
         $(function(){
-           
+            xthis.generateHexes();
 
+            
+            
+        
+            
             xthis.container = document.getElementById(args.containerId);
             xthis.canvas = document.getElementById(args.canvasId);
-           
             
-            //*
-            $('#map').width(xthis.container_width);
-            $('#map').height(xthis.container_height);
-            $(xthis.canvas).attr('width', xthis.container_width).width(xthis.container_width);
-            $(xthis.canvas).attr('height', xthis.container_height).height(xthis.container_height);
-//*/
+            xthis.container.innerHTML=xthis.markup;
+            if(xthis.blockingHexes.length > 0){
+                for(var i =0,len = xthis.blockingHexes.length; i <len; i++){
+                    var _x = xthis.blockingHexes[i].x,
+                        _y = xthis.blockingHexes[i].y;
+                        console.log(xthis.hex(_x,_y));                           
+                        xthis.hex(_x,_y).blocksLos = true;
+                }
+            }
             
-             xthis.generateHexes();
-             xthis.container.innerHTML=xthis.markup;
+            
             xthis.eachHex(function(x,y){
                 this.set_hex_arc_data();
                 this.set_traversal_data();
+                
+                
+                
             });
             
+           
             
+            $(xthis.canvas).width(xthis.container_width);
+            $(xthis.canvas).height(xthis.container_height);
+            $(xthis.container).width(xthis.container_width);
+            $(xthis.container).height(xthis.container_height);
+           
         });
         
         
@@ -191,12 +205,9 @@
     }
     hexgrid.prototype.randomBlocking = function(hexesToBlock){
             for(var i = 0; i<hexesToBlock; i++){
-                var rX = Math.floor(Math.random() * this.mapsize_x), 
-                    rY = Math.floor(Math.random() * this.mapsize_y);
-                    
-                    
-                    
-                this.hex(rX,rY).blocksLos = true;
+                var rX = Math.floor(Math.random() * grid.mapsize_x), 
+                    rY = Math.floor(Math.random() * grid.mapsize_y);
+                grid.hex(rX,rY).blocksLos = true;
             }
         }
  
