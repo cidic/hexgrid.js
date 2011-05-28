@@ -5,6 +5,8 @@
 	
 	function get_hex_loop(hex, distance) {
 		// get array of hexes in loop around 'hex' 
+        // consider memoizing this
+        
 		var	distance = distance || 1,
 			origin_x = hex.x,
 			origin_y = hex.y,
@@ -43,51 +45,10 @@
             _x = next_coords.x;
             _y = next_coords.y;
             
-            next = grid.hex(_x,_y)
+            next = grid.hex(_x,_y);
 		    }
             
         }
-          
-/*
-		// each arc passe picks up on the last value of 'next'
-		// trace north east arc
-		for(var i = 0; i < distance; i++){		
-			process(next);
-            result.push(next);
-			next = next.get_se_hex;
-		}
-		// trace east arc
-		for(var i = 0; i < distance ; i++){
-		    process(next);
-			result.push(next);
-			next = next.get_s_hex;
-		}
-		// trace south east arc
-		for(var i = 0; i < distance; i++){		
-			process(next);
-            result.push(next);			
-			next = next.get_sw_hex;
-		}
-		// trace south west arc
-		for(var i = 0; i < distance; i++){	
-			process(next);
-			result.push(next);
-			next = next.get_nw_hex;            
-		}
-		// trace west arc
-		for(var i = 0; i < distance; i++){
-			process(next);
-            result.push(next);
-			next = next.get_n_hex;
-
-		}
-		//trace north west arc
-		for(var i = 0; i < distance; i++){	
-			process(next);
-			result.push(next);
-			next = next.get_ne_hex;
-		}
-        */
 		return result;
 	}
 	
@@ -252,7 +213,7 @@
 	    return data_groups;
 	}
 	
-	function get_los_arc_groups(origin_hex, blocking_hex_groups) {
+	function get_los_arc_groups(origin_hex, blocking_hex_groups, distance) {
 		var result = [];
 	    if(blocking_hex_groups.length < 1){
             return null;   
@@ -260,6 +221,8 @@
 		for(var i = 0, len = blocking_hex_groups.length; i<len; i++) {
 			var arc_groups = get_min_max_group_hex_corners(origin_hex, blocking_hex_groups[i]);
 			
+            arc_groups.distance = distance;
+            
 			result.push(arc_groups);
 			
 			// draw lines for testing purposes
@@ -291,33 +254,26 @@
 		}
 		var origin_hex = grid.hex(5,5),
 			loop_radius = 1,
-			max_loop_radius = 3,
-			los_arc_groups = [];
-           origin_hex.setColor('yellow');
+			max_loop_radius = 4,
+			los_arc_groups = [],
+            los_data = [];
+            
+            origin_hex.setColor('yellow')
 			
 		for(var r = loop_radius; r <= max_loop_radius; r++){
             loop_radius = r;
 		
 		    var loop_hexes = get_hex_loop(origin_hex, loop_radius); // array of all hexes in loop
 		    // if there are already los_arc_groups
-		    var hidden_hexes = [];
+            
 		    // array of los blocking hex groups, needs full hex loop
             var blocking_hex_groups = get_los_blocking_hex_groups(loop_hexes, blocks_los); 
-            // array of los blocking hex groups from latest hex loop
-            
-            //console.log('--- blocking group : '+loop_radius); 
-            
-            var test_blockingHexes = loop_hexes.filter(function(el){
-                
-                    return el.blocksLos;
-                });
-            
-            
-           // console.log(test_blockingHexes);
-           //console.log(loop_hexes);
-            var new_los_arc_groups = get_los_arc_groups(origin_hex, blocking_hex_groups);
-            
+            // array of los blocking hex groups from latest hex loop            
+            var new_los_arc_groups = get_los_arc_groups(origin_hex, blocking_hex_groups, loop_radius);
 			// array of field of view arc data
+            
+            
+            // if there is already los data add to it
             if(new_los_arc_groups && new_los_arc_groups.length > 0){
                 los_arc_groups = los_arc_groups.concat(new_los_arc_groups);
             }
@@ -326,11 +282,14 @@
             if(los_arc_groups  && los_arc_groups.length > 0) {
     
                 // filter out hexes that are not within the los_arc_groups color them white
+                // TODO exclude them from being processed as blocking hexes?
+                
+                
                 for(var j = 0,len = los_arc_groups.length; j<len; j++){
                     for(var i = 0,len2 = loop_hexes.length; i<len2; i++) {
                         
                         if(hex_inside_arc_group(origin_hex, loop_hexes[i], los_arc_groups[j])){
-                            //hidden_hexes.push(loop_hexes[i]);
+                            
                         
                             if(loop_hexes[i].blocksLos === false)
                                 loop_hexes[i].setColor('white');
@@ -339,15 +298,14 @@
                     }
                     
                     draw_fov2(
-                     origin_hex.center.x
-                    ,origin_hex.center.y
-                    ,los_arc_groups[j].min
-                    ,los_arc_groups[j].max
-                    ,loop_radius
-                    ,"rgba(50, 50,250, .15)"
-                    ,"rgba(0,0,250, .9)"
-                   // ,true
-                );
+                         origin_hex.center.x
+                        ,origin_hex.center.y
+                        ,los_arc_groups[j].min
+                        ,los_arc_groups[j].max
+                        ,los_arc_groups[j].distance * grid.hex_width
+                        ,"rgba(50, 50,250, .15)"
+                        ,"rgba(0,0,250, .9)"
+                    );
                 }
             }
 			hexes = []; // reset hexes
@@ -395,8 +353,8 @@
                 {x : 4, y : 5},
                 {x : 5, y : 4},
                 {x : 7, y : 5},
-                {x : 6, y : 7}
-                
+                {x : 6, y : 7},
+                {x : 4, y : 6}
                 ]
         });
      

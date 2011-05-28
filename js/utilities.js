@@ -22,7 +22,7 @@ function draw_line(x1, y1, x2, y2, color, width) {
 
 function draw_fov2(x1, y1, min, max, distance, color1, color2) {
    // min,max = radian values
-    var distance = distance*grid.hex_width || 50,
+    var distance = distance || 50,
         color1 = color1 || "rgba(255, 50,50, .15)",
         color2 = color2 || "rgba(255, 50,50, .8)",
         drawValues = drawValues || false;
@@ -37,24 +37,10 @@ function draw_fov2(x1, y1, min, max, distance, color1, color2) {
        
         this.beginPath();
         
-       // this.strokeStyle = "rgba(255, 50,50, .8)";
-       // 
-        
-        //this.strokeStyle = "rgba(255, 0,0, .8)";
         this.moveTo(((distance) * Math.cos(max)) + x1,((distance) * Math.sin(max)) + y1);
         this.arc(x1,y1, distance ,max + (2*Math.PI), min + (2*Math.PI),true);
-        this.arc(x1,y1, distance+120, min +(2*Math.PI),max + (2*Math.PI), false );
-        //this.lineTo(((distance) * Math.cos(max)) + x1,((distance) * Math.sin(max)) + y1);
-       // this.lineTo(((distance+20) * Math.cos(max)) + x1,((distance+20) * Math.sin(max)) + y1);
-       // this.lineTo(((distance+20) * Math.cos(min)) + x1,((distance+20) * Math.sin(min)) + y1);
-        //this.lineTo(((distance) * Math.cos(min)) + x1,((distance) * Math.sin(min)) + y1);
-      //  this.lineTo(x1,y1);
-        
-       // this.strokeStyle = "rgba(255, 255 ,0, .8)";  
-        //this.arc(x1,y1, distance ,max + (2*Math.PI), min + (2*Math.PI),true);
-        
-       //this.strokeStyle = "rgba(0, 0 ,0, .8)";
-      //  this.lineTo((distance * Math.cos(min)) + x1,(distance * Math.sin(min)) + y1);
+        this.arc(x1,y1, distance+50, min +(2*Math.PI),max + (2*Math.PI), false );
+    
         
         
         this.closePath();
