@@ -1,25 +1,18 @@
-
-/*--- draw tools ---*/
-function draw_line(x1, y1, x2, y2, color, width) {    
-        //checks if line crosses hex
-        
-        
-        
+function draw_line(x1, y1, x2, y2, color, width) {       
     var color = color || 'red',
         width = width || 1;
 
-        grid.draw(function(){            
-            this.beginPath();
-            this.moveTo(x1, y1);
-            this.lineTo(x2, y2);
-            this.strokeStyle = color;
-            this.lineWidth = width;
-            this.stroke();
-            this.closePath();
-        });
+    grid.draw(function(){            
+        this.beginPath();
+        this.moveTo(x1, y1);
+        this.lineTo(x2, y2);
+        this.strokeStyle = color;
+        this.lineWidth = width;
+        this.stroke();
+        this.closePath();
+    });
 
 }
-
 function draw_fov2(x1, y1, min, max, distance, color1, color2) {
    // min,max = radian values
     var distance = distance || 50,
@@ -36,7 +29,7 @@ function draw_fov2(x1, y1, min, max, distance, color1, color2) {
        
        
         this.beginPath();
-        
+       
         this.moveTo(((distance) * Math.cos(max)) + x1,((distance) * Math.sin(max)) + y1);
         this.arc(x1,y1, distance ,max + (2*Math.PI), min + (2*Math.PI),true);
         this.arc(x1,y1, distance+50, min +(2*Math.PI),max + (2*Math.PI), false );
@@ -49,7 +42,6 @@ function draw_fov2(x1, y1, min, max, distance, color1, color2) {
        
      });
 }
-
 function draw_fov(x1, y1, min, max, distance, color1, color2, drawValues,note) {
    // min,max = radian values
     var distance = distance || 50,
@@ -101,49 +93,47 @@ function draw_fov(x1, y1, min, max, distance, color1, color2, drawValues,note) {
             this.fillText(min.toFixed(1)+' ['+note+'] min', minX, minLblY);
             this.fillText(max.toFixed(1)+' ['+note+'] max', maxX,maxLblY);
         }
-     });
+    });
 }
 function draw_radian_line(x, y, radian, distance, color, width) {
     
-var _x = (distance * Math.cos(radian)) + x,
-    _y = (distance * Math.sin(radian)) + y;
+    var _x = (distance * Math.cos(radian)) + x,
+        _y = (distance * Math.sin(radian)) + y;
     
-        draw_line(x,y,_x,_y,color,width);
-                    
-}
-   
-    function draw_triangle(x1,y1,x2,y2,x3,y3, color1, color2) {
-        
-        var colors = ['255,0,0','0,255,0','0,0,255','0,130,130','255,200,0'];
-        
-        function c() {
-                var index = Math.floor(Math.random() * colors.length);
-                return colors[index];
-        }
-        var rCol =  c();
-        
-        
-        var canvas = document.getElementById('canvas');
-        if (canvas.getContext){
-            var ctx = canvas.getContext('2d'),
-             color1 = color1 || rCol+',0.1',
-             color2 = color2 || rCol+',0.9';
+        draw_line(x,y,_x,_y,color,width);                 
+}  
+function draw_triangle(x1,y1,x2,y2,x3,y3, color1, color2) {
     
-            grid.draw(function(){
-                this.fillStyle = "rgba("+color1+")";
-                this.strokeStyle = "rgba("+color2+")";
-                this.globalAlpha = 1.0;
-                this.beginPath();
-                this.moveTo(x1, y1);
-                this.lineTo(x2, y2);
-                this.lineTo(x3, y3);
-                this.lineTo(x1, y1);
-                this.closePath();
-                this.stroke();
-                this.fill();
-            });
-        }
+    var colors = ['255,0,0','0,255,0','0,0,255','0,130,130','255,200,0'];
+    
+    function c() {
+            var index = Math.floor(Math.random() * colors.length);
+            return colors[index];
     }
+    var rCol =  c();
+    
+    
+    var canvas = document.getElementById('canvas');
+    if (canvas.getContext){
+        var ctx = canvas.getContext('2d'),
+         color1 = color1 || rCol+',0.1',
+         color2 = color2 || rCol+',0.9';
+
+        grid.draw(function(){
+            this.fillStyle = "rgba("+color1+")";
+            this.strokeStyle = "rgba("+color2+")";
+            this.globalAlpha = 1.0;
+            this.beginPath();
+            this.moveTo(x1, y1);
+            this.lineTo(x2, y2);
+            this.lineTo(x3, y3);
+            this.lineTo(x1, y1);
+            this.closePath();
+            this.stroke();
+            this.fill();
+        });
+    }
+}
 function get_extended_line_coord(x1,y1,x2,y2) {
     var slope = (y2 - y1) / (x2 - x1),
         yintercept = y1 - slope * x1,
@@ -155,7 +145,6 @@ function get_extended_line_coord(x1,y1,x2,y2) {
             y: yr
         };
 }
-
 function distance_test(hex_a,hex_b){
     var dist,
         // must be hex space coords

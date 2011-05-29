@@ -1,72 +1,61 @@
-
-   
+function hexgrid(args){
     
-    function hexgrid(args){
-        
-        var args = args || {};
-        this.mapsize_x = args.mapsize_x;
-        this.mapsize_y = args.mapsize_y;
-        this.hexes = MultiDimensionalArray(this.mapsize_x,this.mapsize_y);
-        
-        this.hex_width = args.hex_width;
-        this.hex_height = args.hex_height;
-		
-        this.hex_corner_offset = args.hex_corner_offset;
-		this.map_pixel_height = this.hex_height * this.mapsize_y;
-		this.container_width = this.hex_width * this.mapsize_y + (this.hex_height/2);
-		this.container_height = this.hex_height * this.mapsize_y + (this.hex_height/2) + 2;
+    var args = args || {};
+    this.mapsize_x = args.mapsize_x;
+    this.mapsize_y = args.mapsize_y;
+    this.hexes = MultiDimensionalArray(this.mapsize_x,this.mapsize_y);
+    
+    this.hex_width = args.hex_width;
+    this.hex_height = args.hex_height;
+	
+    this.hex_corner_offset = args.hex_corner_offset;
+	this.map_pixel_height = this.hex_height * this.mapsize_y;
+	this.container_width = (this.hex_width - this.hex_corner_offset) * this.mapsize_x + this.hex_corner_offset;
+	this.container_height = this.hex_height * this.mapsize_y + (this.hex_height/2) + 2;
 
-        this.blockingHexes = args.blockingHexes;
-        
-        this.generateHexes();
-        
-        if(this.blockingHexes.length > 0){
-            for(var i =0,len = this.blockingHexes.length; i <len; i++){
-                var _x = this.blockingHexes[i].x,
-                    _y = this.blockingHexes[i].y;
-                    this.hex(_x,_y).blocksLos = true;
-            }
+    this.blockingHexes = args.blockingHexes;
+    
+    this.generateHexes();
+    
+    if(this.blockingHexes.length > 0){
+        for(var i =0,len = this.blockingHexes.length; i <len; i++){
+            var _x = this.blockingHexes[i].x,
+                _y = this.blockingHexes[i].y;
+                this.hex(_x,_y).blocksLos = true;
         }
+    }   
+    this.eachHex(function(x,y){
+            this.set_hex_arc_data();
+            this.set_traversal_data();
+    });
+    $($.proxy(function(){
+        
+        this.container = document.getElementById(args.containerId);
+        this.canvas = document.getElementById(args.canvasId);
+        
+        this.container.innerHTML = this.markup;
+        
+        $(this.canvas).attr('width',this.container_width);
+        $(this.canvas).attr('height',this.container_height);
+        $(this.container).width(this.container_width);
+        $(this.container).height(this.container_height);
+    }, this));
+    
+    
+    this.getCtx = function(){                
+        return (this.canvas.getContext)? this.canvas.getContext('2d') : null;
+    };
+    
+    this.draw = function(drawFunction){
+        if(this.canvas && this.canvas.getContext){
+            var ctx = this.canvas.getContext('2d');
+            drawFunction.apply(ctx);
+        }
+    } 
 
     
-        
-        $($.proxy(function(){
-            
-            this.container = document.getElementById(args.containerId);
-            this.canvas = document.getElementById(args.canvasId);
-            
-            this.container.innerHTML = this.markup;
-            
-            this.eachHex(function(x,y){
-                this.set_hex_arc_data();
-                this.set_traversal_data();
-                
-            });
-            
-            
-            $(this.canvas).attr('width',this.container_width);
-            $(this.canvas).attr('height',this.container_height);
-            $(this.container).width(this.container_width);
-            $(this.container).height(this.container_height);
-            
-        	
-        }, this));
-        
-        
-        this.getCtx = function(){                
-            return (this.canvas.getContext)? this.canvas.getContext('2d') : null;
-        };
-        
-        this.draw = function(drawFunction){
-            if(this.canvas && this.canvas.getContext){
-                var ctx = this.canvas.getContext('2d');
-                drawFunction.apply(ctx);
-            }
-        } 
-
-        
-        
-    }
+    
+}
     hexgrid.prototype.hex = function (x,y){
         if(
             this.hexes[x] !== undefined

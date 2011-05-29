@@ -35,9 +35,9 @@
             
             for(var i = 0; i < distance; i++){	
                 // if hex exists
-              //  if(next) {
+             //   if(next) {
                     result.push(next);
-            //    }
+             //   }
 			
             
             var next_coords = directions[d](_x,_y);
@@ -118,7 +118,7 @@
 		// hex1: origin
 		// hex2: target hex
 		// arc_group
-        
+        if(hex2 === false) return false;
 		var arc1 = arc_group.min.toFixed(6),
 			arc2 = arc_group.max.toFixed(6),
 			hex_arc_min = hex1.arc_data[hex2.x][hex2.y].min.radian.toFixed(6),
@@ -252,7 +252,7 @@
 			if(blocks){ hex.setColor('blue'); }
 			return blocks;
 		}
-		var origin_hex = grid.hex(5,5),
+		var origin_hex = grid.hex(7,7),
 			loop_radius = 1,
 			max_loop_radius = 4,
 			los_arc_groups = [],
@@ -297,15 +297,7 @@
                         }
                     }
                     
-                    draw_fov2(
-                         origin_hex.center.x
-                        ,origin_hex.center.y
-                        ,los_arc_groups[j].min
-                        ,los_arc_groups[j].max
-                        ,los_arc_groups[j].distance * grid.hex_width
-                        ,"rgba(50, 50,250, .15)"
-                        ,"rgba(0,0,250, .9)"
-                    );
+                  
                 }
             }
 			hexes = []; // reset hexes
@@ -325,6 +317,15 @@
         if(los_arc_groups && los_arc_groups.length > 0){
             for(var i = 0, len = los_arc_groups.length; i<len; i++){
              
+               draw_fov2(
+                         origin_hex.center.x
+                        ,origin_hex.center.y
+                        ,los_arc_groups[i].min
+                        ,los_arc_groups[i].max
+                        ,los_arc_groups[i].distance * grid.hex_height
+                        ,"rgba(50, 50,250, .15)"
+                        ,"rgba(0,0,250, .9)"
+                    );
              /*
                 draw_fov(
                      origin_hex.center.x
@@ -342,8 +343,8 @@
     }
 
     var grid = new hexgrid({
-             mapsize_x : 10
-            ,mapsize_y : 10
+             mapsize_x : 20
+            ,mapsize_y : 20
             ,hex_width : 30
             ,hex_height : 26
             ,hex_corner_offset : 8
@@ -354,7 +355,11 @@
                 {x : 5, y : 4},
                 {x : 7, y : 5},
                 {x : 6, y : 7},
-                {x : 4, y : 6}
+                {x : 4, y : 6},
+                {x : 9, y : 6},
+                {x : 9, y : 9},
+                {x : 7, y : 9}
+                
                 ]
         });
      
@@ -363,7 +368,7 @@
   
 	$(function(){
         
-        los_tester();	
+        //los_tester();	
 	
     		
 	});
