@@ -160,21 +160,23 @@ angleSet.prototype.containsAngle = function (angle) {
     return this.segmentIsFull(this.findSegment(angle))
 };
 
+angleSet.prototype.containsInterval_internal = function (min, max, segment) {
+    // Returns the same value as containsInterval, on the conditions that:
+    // - the interval touches the given full segment at both ends; and
+    // - this set and the interval are both non-full.
+    if (segment == this.edges.length - 1) {
+        segment = this.getInterval(segment);
+        return ((min >= segment.max) && (max <= segment.min)) == (max < min);
+    } else return (max > min);
+}
+
 angleSet.prototype.containsInterval = function (min, max) {
-    // Returns true if every angle between the given min and max values is included in the set,
-    // or otherwise returns false.
+    // Returns true if every angle between the given min and max values is included in the set, or
+    // otherwise returns false.
     var minSegment = this.findSegment(min);
-    if (!this.segmentIsFull(minSegment) || (this.findSegment(max) != minSegment))
-        return false; // Both ends of the interval must lie in the same full segment.
-    if (minSegment == this.edges.length - 1) {
-        if (minSegment == -1) return true; // This is a full set.
-        var interval = this.getInterval(minSegment);
-        // For the last segment (which includes PI), the interval must either:
-        // - Not include PI and start and end on the same side of PI in the segment; or
-        // - Include PI and start and end on different sides of PI in the segment.
-        return ((min >= interval.max) && (max <= interval.min)) == (max < min);
-    }
-    else return (max > min) // For any segment but the last, the interval must also not include PI.
+    return (this.segmentIsFull(minSegment) && (this.findSegment(max) == minSegment))
+        && ((minSegment == -1)
+            || ((min != max) && this.containsInterval_internal(min, max, minSegment)));
 };
 
 angleSet.prototype.containsSet = function (set) {
@@ -188,31 +190,31 @@ angleSet.prototype.containsSet = function (set) {
 angleSet.prototype.addInterval = function (min, max) {
     // Add the given angle interval to this set such that all angles between min and max are
     // included in this set.
+    
+    if (this.isFull()) return;
+    
     var offset = min - max;
-    if ((0 <= offset) && (offset <= angleSet.TOLERANCE))
-        return this.makeFull(); // A full interval is being added; make this set full.
+    if ((0 <= offset) && (offset <= angleSet.TOLERANCE)) return this.makeFull(); // Full interval.
+    
+    // Determine where new section of edges is to be inserted.
     var minSegment = this.findSegment(min), maxSegment = this.findSegment(max);
     if (this.segmentIsFull(minSegment)) {
-        if (minSegment == maxSegment) {
-            if (minSegment == -1) return; // This is a full set.
-            var interval = this.getInterval(minSegment);
-            if (((min >= interval.max) && (max <= interval.min)) != (max < min))
-                return this.makeFull(); // A full set is formed with this interval.
-        }
-        min = this.edges[minSegment]
+        if ((minSegment == maxSegment) && !this.containsInterval_internal(min, max, minSegment))
+            return this.makeFull(); // A full set is formed.
+        min = this.edges[minSegment];
     }
-    else minSegment++;
+    else minSegment = (min < this.edges[minSegment]) ? 0 : (minSegment + 1);
     if (this.segmentIsFull(maxSegment)) {
-        maxSegment = (maxSegment + 1) % this.edges.length;
-        max = this.edges[maxSegment];
-    }
-    maxSegment++;
+        maxSegment = (maxSegment + 1) % this.edges.length
+        max = this.edges[maxSegment]
+    } else if (max < this.edges[maxSegment]) maxSegment = -1;
+    
+    // Splice in new section of edges.
     if (max < min) {
         this.edges.splice(minSegment, this.edges.length, min);
-        this.edges.splice(0, (maxSegment == minSegment) ? 0 : maxSegment, max);
+        this.edges.splice(0, maxSegment + 1, max);
         this.inverted = true;
-    }
-    else this.edges.splice(minSegment, maxSegment - minSegment, min, max);
+    } else this.edges.splice(minSegment, maxSegment - minSegment + 1, min, max);
 };
 
 angleSet.prototype.addSet = function (set) {
