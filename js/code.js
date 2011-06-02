@@ -227,7 +227,7 @@
 			
 			// draw lines for testing purposes
        
-            /*
+            //*
             draw_triangle(
                 origin_hex.center.x,
                 origin_hex.center.y,
@@ -238,7 +238,7 @@
                 '200,100,100,0.3',
                 '250,50,50,0.9'
             );
-            */
+            //*/
 		}
 
 		return result;
@@ -254,7 +254,7 @@
 		}
 		var origin_hex = grid.hex(7,7),
 			loop_radius = 1,
-			max_loop_radius = 4,
+			max_loop_radius = 50,
 			los_arc_groups = [],
             los_data = [];
             
@@ -368,7 +368,7 @@
   
 	$(function(){
         
-        //los_tester();	
+       // los_tester();	
 	
     		
 	});
