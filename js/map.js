@@ -24,9 +24,9 @@ function hexgrid(args){
                 this.hex(_x,_y).blocksLos = true;
         }
     }   
-    this.eachHex(function(x,y){
-            this.set_hex_arc_data();
-            this.set_traversal_data();
+    this.eachHex(function(x,y, hex){
+            hex.set_hex_arc_data();
+            hex.set_traversal_data();
     });
     $($.proxy(function(){
         
@@ -71,13 +71,19 @@ function hexgrid(args){
         }
     };
     
-    hexgrid.prototype.eachHex = function(func){
+    hexgrid.prototype.eachHex = function(func, context){
+        // use hexes[x][y] instead of hex(x,y) we can make the assumption that all hexes returned exist, so skipp checking if undefined
+                         
+
         for (var x=0; x < this.mapsize_x; x++) {
 			for (var y=0; y < this.mapsize_y; y++) { 
-                func.apply(this.hexes[x][y],[x,y]);          
+                var thisHex = this.hexes[x][y];
+                   var context = context || thisHex;
+                     
+                func.apply(context,[x,y, thisHex]);  
 			}
         }
-    }
+    };
 
 
     hexgrid.prototype.generateHexes = function(){
@@ -195,4 +201,58 @@ function hexgrid(args){
             }
         }
  
+ 
+ hexgrid.prototype.generate_arc_data = function(){
+    // returns the min and max radian of the corners of hex2 when hex1 is the origin
+    // may want to be able to process a collection of hexes to find min/max; turn hex1 into an array of hex objects and do a foreach loop
+	
+	var hex1 = this.hex(0,0),
+        arc_data = {};
+    
+    
+    this.eachHex(function(x,y){
+        if(x !== 0 && y !== 0){
+            var thisHex = this.hex(x,y);
+            
+            arc_data[x] = {};
+            arc_data[x][y] = get_arc_data(thisHex);
+        }
+    }, this);
+    
+    this.arc_data = arc_data;
+
+    function get_arc_data(hex2){
+        var radian = [],
+            min_radian_index = 0,
+            max_radian_index = 0; //index of the lowest value
+            
+        for(var i=0;i<6;i++) {
+            radian[i] = Math.atan2(hex2.corners[i].y - hex1.center.y, hex2.corners[i].x - hex1.center.x); // get radian of each corner point				
+			
+            if(radian[i] < radian[min_radian_index]) {
+                min_radian_index = i;
+            }
+            
+            if(radian[i] > radian[max_radian_index]) {
+                max_radian_index = i;
+            }
+            
+        }	
+		
+        // if hex is NOT on the wraparound point (left of origin hex where PI becomes -PI)
+        // check that the absolute value of the difference of the max and min is > pi.
+        // that happens, then it goes the other direction, take the smallest positive value and largest negative value instead of the actual smallest/largest.
+	
+	    if((Math.abs(radian[max_radian_index] - radian[min_radian_index])) > Math.PI){
+		    min_radian_index = get_lowest_positive_index(radian);			
+		    max_radian_index = get_highest_negative_index(radian);
+	    }
+        return  {
+                    min : radian[min_radian_index],
+                    max : radian[max_radian_index]			
+		        };
+    }
+    
+    
+ }
    
