@@ -3,7 +3,7 @@
 
 
 
-	function get_hex_loop(hex, distance) {
+    function get_hex_loop(hex, distance) {
 		// get array of hexes in loop around 'hex'
         // consider memoizing this
 
@@ -197,13 +197,8 @@
 			result.addInterval(corners.min, corners.max);
 
 			// draw lines for testing purposes
-<<<<<<< HEAD
-       
-            //*
-=======
 
             /*
->>>>>>> 7ba56d724bce46fb71270de41a9e4ba780b631b1
             draw_triangle(
                 origin_hex.center.x,
                 origin_hex.center.y,
@@ -214,7 +209,7 @@
                 '200,100,100,0.3',
                 '250,50,50,0.9'
             );
-            //*/
+            */
 		}
 
 		return result;
@@ -227,19 +222,6 @@
 			if(blocks){ hex.setColor('blue'); }
 			return blocks;
 		}
-<<<<<<< HEAD
-		var origin_hex = grid.hex(7,7),
-			loop_radius = 1,
-			max_loop_radius = 50,
-			los_arc_groups = [],
-            los_data = [];
-            
-            origin_hex.setColor('yellow')
-			
-		for(var r = loop_radius; r <= max_loop_radius; r++){
-            loop_radius = r;
-		
-=======
         
 		var origin_hex = grid.hex(10,10),
 			max_loop_radius = 20,
@@ -249,7 +231,6 @@
 
 		for(var loop_radius = 1; loop_radius <= max_loop_radius; loop_radius++){
 
->>>>>>> 7ba56d724bce46fb71270de41a9e4ba780b631b1
 		    var loop_hexes = get_hex_loop(origin_hex, loop_radius); // array of all hexes in loop
 
             // array of los blocking hex groups from latest hex loop
@@ -312,16 +293,9 @@
 
 
 	$(function(){
-<<<<<<< HEAD
-        
-       // los_tester();	
-	
-    		
-=======
 
         los_tester();
 
->>>>>>> 7ba56d724bce46fb71270de41a9e4ba780b631b1
 	});
 
 
