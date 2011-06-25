@@ -206,6 +206,21 @@ function hexgrid(args){
     // returns the min and max radian of the corners of hex2 when hex1 is the origin
     // may want to be able to process a collection of hexes to find min/max; turn hex1 into an array of hex objects and do a foreach loop
 	
+    
+// To flip an angle vertically, negate it
+// To flip an angle both vertically and horizontally, add pi to it
+// So, to flip horizontally negate and add pi
+// The order doesn't matter
+// But remember to normalise them
+// I suppose you would do: if <= 0, add pi, if > 0, subtract pi
+// That will ensure they're still normalised afterwards
+// (and adding pi and subtracting pi are really the same thing)
+
+// To flip the angle horizontally and vertically you either add or subtract pi.
+// Then no normalisation is needed
+
+    
+    
 	var hex1 = this.hex(0,0),
         arc_data = {};
     
@@ -219,8 +234,31 @@ function hexgrid(args){
         }
     }, this);
     
+    
+    // flip and copy from bottom right to top left
+    for(var x = 0, len = this.mapsize_x; x <len; x++){
+        for(var y = 0, len2 = this.mapsize_x; y <len2; y++){
+            // skip the first column of hexes
+        
+            var arc_data_obj = arc_data[x][y],
+                negative_x = x * -1,
+                negative_y = y * -1;
+                
+                arc_data[negative_x] = {};
+                arc_data[negative_x][negative_y] = { 
+                                                        min : (arc_data_obj.min + Math.PI),
+                                                        max : (arc_data_obj.max + Math.PI)
+                };
+                
+                
+        }
+    }
+    
+    
+    
+    
     this.arc_data = arc_data;
-
+    
     function get_arc_data(hex2){
         var radian = [],
             min_radian_index = 0,

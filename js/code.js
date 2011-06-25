@@ -288,9 +288,11 @@
                 return array;
             })()
         });
+        
+        console.log(grid);
 
 
-
+console.log('x');
 
 	$(function(){
 
