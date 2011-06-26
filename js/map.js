@@ -7,7 +7,7 @@ function hexgrid(args){
     
     this.hex_width = args.hex_width;
     this.hex_height = args.hex_height;
-	
+    
     this.hex_corner_offset = args.hex_corner_offset;
 	this.map_pixel_height = this.hex_height * this.mapsize_y;
 	this.container_width = (this.hex_width - this.hex_corner_offset) * this.mapsize_x + this.hex_corner_offset;
@@ -28,6 +28,9 @@ function hexgrid(args){
             hex.set_hex_arc_data();
             hex.set_traversal_data();
     });
+    
+    this.generate_arc_data();
+    
     $($.proxy(function(){
         
         this.container = document.getElementById(args.containerId);
@@ -206,59 +209,62 @@ function hexgrid(args){
     // returns the min and max radian of the corners of hex2 when hex1 is the origin
     // may want to be able to process a collection of hexes to find min/max; turn hex1 into an array of hex objects and do a foreach loop
 	
-    
-// To flip an angle vertically, negate it
-// To flip an angle both vertically and horizontally, add pi to it
-// So, to flip horizontally negate and add pi
-// The order doesn't matter
-// But remember to normalise them
-// I suppose you would do: if <= 0, add pi, if > 0, subtract pi
-// That will ensure they're still normalised afterwards
-// (and adding pi and subtracting pi are really the same thing)
-
-// To flip the angle horizontally and vertically you either add or subtract pi.
-// Then no normalisation is needed
-
-    
-    
 	var hex1 = this.hex(0,0),
         arc_data = {};
     
-    
+    arc_data[0] = {};
+	
     this.eachHex(function(x,y){
-        if(x !== 0 && y !== 0){
+		
+        if(!(x === 0 && y === 0)){
             var thisHex = this.hex(x,y);
-            
-            arc_data[x] = {};
+            if (!(x in arc_data))
+            	arc_data[x] = {};
             arc_data[x][y] = get_arc_data(thisHex);
         }
-    }, this);
-    
-    
-    // flip and copy from bottom right to top left
-    for(var x = 0, len = this.mapsize_x; x <len; x++){
-        for(var y = 0, len2 = this.mapsize_x; y <len2; y++){
-            // skip the first column of hexes
-        
-            var arc_data_obj = arc_data[x][y],
-                negative_x = x * -1,
-                negative_y = y * -1;
-                
-                arc_data[negative_x] = {};
-                arc_data[negative_x][negative_y] = { 
-                                                        min : (arc_data_obj.min + Math.PI),
-                                                        max : (arc_data_obj.max + Math.PI)
-                };
-                
-                
-        }
-    }
-    
-    
-    
-    
+    }, this);	
+	
+	// generate other quadrant arc_data    
+	
+	for (var x in arc_data) { 
+		// skip x = 0
+		if(x != 0){
+			var negX = x * -1;
+			arc_data[negX] = {};
+			
+			for (var y in arc_data[x]) { 
+				// skip y = 0
+				if(y != 0){
+					
+					var negY = y * -1,
+						min = arc_data[x][y].min,
+						max = arc_data[x][y].max;
+				
+					//generate top right
+					arc_data[x][negY] = {
+											min : min * -1,
+											max : max * -1
+										};				
+					//generate top left
+					arc_data[negX][negY] = {
+											min : (min > 0)? min - Math.PI : min + Math.PI,
+											max : (max > 0)? max - Math.PI : max + Math.PI
+										};
+										
+					//generate bottom left
+					arc_data[negX][y] = {
+											min : Math.PI - min,
+											max : Math.PI - max
+										};
+										
+				}
+			}
+		}
+	}
+	
+console.log(arc_data);
     this.arc_data = arc_data;
-    
+
     function get_arc_data(hex2){
         var radian = [],
             min_radian_index = 0,
