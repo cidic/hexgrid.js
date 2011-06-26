@@ -212,7 +212,7 @@ function hexgrid(args){
 	var hex1 = this.hex(0,0),
         arc_data = {};
     
-    arc_data[0] = {};
+	arc_data[0] = {};
 	
     this.eachHex(function(x,y){
 		
@@ -229,40 +229,36 @@ function hexgrid(args){
 	for (var x in arc_data) { 
 		// skip x = 0
 		if(x != 0){
-			var negX = x * -1;
+		
 			arc_data[negX] = {};
 			
 			for (var y in arc_data[x]) { 
 				// skip y = 0
 				if(y != 0){
-					
-					var negY = y * -1,
-						min = arc_data[x][y].min,
+					var min = arc_data[x][y].min,
 						max = arc_data[x][y].max;
 				
 					//generate top right
-					arc_data[x][negY] = {
+					arc_data[x][-y] = {
 											min : min * -1,
 											max : max * -1
 										};				
 					//generate top left
-					arc_data[negX][negY] = {
+					arc_data[-x][-y] = {
 											min : (min > 0)? min - Math.PI : min + Math.PI,
 											max : (max > 0)? max - Math.PI : max + Math.PI
 										};
-										
 					//generate bottom left
-					arc_data[negX][y] = {
-											min : Math.PI - min,
-											max : Math.PI - max
-										};
-										
+					arc_data[-x][y] = {
+											min : arc_data[-x][-y] * -1,
+											max : arc_data[-x][-y] * -1
+										};			
 				}
 			}
 		}
 	}
 	
-console.log(arc_data);
+	console.log(arc_data);
     this.arc_data = arc_data;
 
     function get_arc_data(hex2){
