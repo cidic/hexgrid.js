@@ -218,8 +218,7 @@ function hexgrid(args){
 		
         if(!(x === 0 && y === 0)){
             var thisHex = this.hex(x,y);
-            if (!(x in arc_data))
-            	arc_data[x] = {};
+            if (!(x in arc_data)) arc_data[x] = {};
             arc_data[x][y] = get_arc_data(thisHex);
         }
     }, this);	
@@ -240,18 +239,18 @@ function hexgrid(args){
 				    
 					//generate top right
 					arc_data[x][-y] = {
-											min : min * -1,
-											max : max * -1
+											min : -max,
+											max : -min
 										};				
 					//generate top left
 					arc_data[-x][-y] = {
-											min : (min > 0)? min - Math.PI : min + Math.PI,
-											max : (max > 0)? max - Math.PI : max + Math.PI
+											min : (min > 0) ? (min - Math.PI) : (min + Math.PI),
+											max : (max > 0) ? (max - Math.PI) : (max + Math.PI)
 										};
 					//generate bottom left
 					arc_data[-x][y] = {
-											min : arc_data[-x][-y].min * -1,
-											max : arc_data[-x][-y].max * -1
+											min : -arc_data[-x][-y].max,
+											max : -arc_data[-x][-y].min
 									    };			
 			//	}
 			}
