@@ -108,6 +108,28 @@
 		var hex_first = hex_group[0],
 			// get last hex in group (if there is 1 hex it will be the same as the first)
 			hex_last = hex_group[hex_group.length - 1],
+            
+            hex_first_x_offset = hex_first.x - hex1.x,
+            hex_first_y_offset = hex_first.y - hex1.y,
+            hex_last_x_offset = hex_last.x - hex1.x,
+            hex_last_y_offset = hex_last.y - hex1.y,
+            result =    {
+							min : grid.arc_data[hex_first_x_offset][hex_first_y_offset].min,
+							max : grid.arc_data[hex_last_x_offset][hex_last_y_offset].max
+						};
+        return result;
+	}
+    function get_min_max_group_hex_corners_backup(hex1,hex_group){
+        // returns the min and max radian of the corners of hex_group when hex1 is the origin
+        // hex groups should only contain 1 or 2 hexes
+        // if there are 2 hexes
+        // we know the first ( hex_group[0] )is the left(counterclockwise) most
+        // and the second ( hex_group[1] ) is the right(clockwise) most
+        // because the arcs are cycled clockwise to form the groups
+
+    	var hex_first = hex_group[0],
+			// get last hex in group (if there is 1 hex it will be the same as the first)
+			hex_last = hex_group[hex_group.length - 1],
             result =    {
 							min : hex1.arc_data[hex_first.x][hex_first.y].min.radian,
 							max : hex1.arc_data[hex_last.x][hex_last.y].max.radian
