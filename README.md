@@ -1,1 +1,1 @@
-Hex grid engine for a javascript game
+Hexgrid framework designed for javascript games.

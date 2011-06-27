@@ -1,0 +1,5 @@
+unit
+-location: current hex
+-getVisibleHexes: returns a list of hexes unit can draw los to
+-getReachableHexes(moveType):  returns a list of hexes unit can move to in one turn from current location (moveType; normal, run, doublemove etc.)
+-getTargetableHexes(weapon):  returns a list of hexes within unit weapon range and los

@@ -230,7 +230,7 @@ function hexgrid(args){
 		// skip x = 0
 		if(x != 0){
 		
-			arc_data[negX] = {};
+			arc_data[-x] = {};
 			
 			for (var y in arc_data[x]) { 
 				// skip y = 0
