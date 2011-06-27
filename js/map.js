@@ -240,8 +240,8 @@ function hexgrid(args){
 				    
 					//generate top right
 					arc_data[x][-y] = {
-											min : min * -1,
-											max : max * -1
+											min : max * -1,
+											max : min * -1
 										};				
 					//generate top left
 					arc_data[-x][-y] = {
@@ -250,8 +250,8 @@ function hexgrid(args){
 										};
 					//generate bottom left
 					arc_data[-x][y] = {
-											min : arc_data[-x][-y].min * -1,
-											max : arc_data[-x][-y].max * -1
+											max : arc_data[-x][-y].max * -1,
+                                            min : arc_data[-x][-y].min * -1
 									    };			
 			//	}
 			}
