@@ -110,15 +110,15 @@
 			hex_last = hex_group[hex_group.length - 1],
             
             hex_first_x_offset = hex_first.x - hex1.x,
-            hex_first_y_offset = hex_first.y - ((hex1.x&1) === 0)? hex1.y - 1 : hex1.y,
+            hex_first_y_offset = hex_first.y - hex1.y - (hex_first.x & hex_first_x_offset & 1),
             
             hex_last_x_offset = hex_last.x - hex1.x,
-            hex_last_y_offset = hex_last.y - ((hex1.x&1) === 0)? hex1.y - 1 : hex1.y;
+            hex_last_y_offset = hex_last.y - hex1.y - (hex_last.x & hex_last_x_offset & 1);
             
             console.log(hex_first_x_offset+','+hex_first_y_offset);
             console.log(hex_last_x_offset+','+hex_last_y_offset);
             
-            var result =    {
+            var result = {
 							min : grid.arc_data[hex_first_x_offset][hex_first_y_offset].min,
 							max : grid.arc_data[hex_last_x_offset][hex_last_y_offset].max
 						};
