@@ -239,28 +239,18 @@ function hexgrid(args){
 				    
 					//generate top right
 					arc_data[x][-y] = {
-<<<<<<< HEAD
-											min : max * -1,
-											max : min * -1
-=======
 											min : -max,
 											max : -min
->>>>>>> d41437690ad7962499e742cda662495e94c8a606
 										};				
 					//generate top left
 					arc_data[-x][-y] = {
-											min : (min > 0) ? (min - Math.PI) : (min + Math.PI),
-											max : (max > 0) ? (max - Math.PI) : (max + Math.PI)
+                                            min : (min > 0) ? (min - Math.PI) : (min + Math.PI),
+                                            max : (max > 0) ? (max - Math.PI) : (max + Math.PI)
 										};
 					//generate bottom left
 					arc_data[-x][y] = {
-<<<<<<< HEAD
-											max : arc_data[-x][-y].max * -1,
-                                            min : arc_data[-x][-y].min * -1
-=======
-											min : -arc_data[-x][-y].max,
-											max : -arc_data[-x][-y].min
->>>>>>> d41437690ad7962499e742cda662495e94c8a606
+											max : -arc_data[-x][-y].max,
+                                            min : -arc_data[-x][-y].min
 									    };			
 			//	}
 			}
