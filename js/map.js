@@ -234,10 +234,10 @@ function hexgrid(args){
 			
 			for (var y in arc_data[x]) { 
 				// skip y = 0
-				if(y != 0){
+			//	if(y != 0){
 					var min = arc_data[x][y].min,
 						max = arc_data[x][y].max;
-				
+				    
 					//generate top right
 					arc_data[x][-y] = {
 											min : min * -1,
@@ -253,12 +253,23 @@ function hexgrid(args){
 											min : arc_data[-x][-y] * -1,
 											max : arc_data[-x][-y] * -1
 										};			
-				}
+			//	}
 			}
 		}
 	}
 	
 	console.log(arc_data);
+    /*
+    for( var i in arc_data){
+        
+       
+        for( var j in arc_data[i]){  
+             
+            console.log(i+','+j);
+        }
+    }
+    */
+    
     this.arc_data = arc_data;
 
     function get_arc_data(hex2){
