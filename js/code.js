@@ -110,10 +110,10 @@
 			hex_last = hex_group[hex_group.length - 1],
             
             hex_first_x_offset = hex_first.x - hex1.x,
-            hex_first_y_offset = hex_first.y - hex1.y - (hex_first.x & hex_first_x_offset & 1),
+            hex_first_y_offset = hex_first.y - hex1.y - (hex1.x & hex_first_x_offset & 1),
             
             hex_last_x_offset = hex_last.x - hex1.x,
-            hex_last_y_offset = hex_last.y - hex1.y - (hex_last.x & hex_last_x_offset & 1);
+            hex_last_y_offset = hex_last.y - hex1.y - (hex1.x & hex_last_x_offset & 1);
             
             console.log(hex_first_x_offset+','+hex_first_y_offset);
             console.log(hex_last_x_offset+','+hex_last_y_offset);
@@ -251,7 +251,7 @@
 		}
         
 		var origin_hex = grid.hex(10,10),
-			max_loop_radius =3,
+			max_loop_radius =100,
 			los_angleSet = new angleSet;
 
         origin_hex.setColor('yellow')
