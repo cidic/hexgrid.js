@@ -212,50 +212,46 @@ function hexgrid(args){
 	var hex1 = this.hex(0,0),
         arc_data = {};
     
-	arc_data[0] = {};
+
 	
-    this.eachHex(function(x,y){
-		
-        if(!(x === 0 && y === 0)){
-            var thisHex = this.hex(x,y);
+    this.eachHex(function (x, y) {
+
+        if ((x != 0) || (y != 0)) {
+
+            var thisArcData = get_arc_data(this.hex(x,y)),
+                min = thisArcData.min,
+                max = thisArcData.max;
+                
+             // Create necessary empty columns.
             if (!(x in arc_data)) arc_data[x] = {};
-            arc_data[x][y] = get_arc_data(thisHex);
+            if (!(-x in arc_data)) arc_data[-x] = {};
+            
+            // Populate bottom-right.
+            arc_data[x][y] = thisArcData;
+
+            // Odd columns must be shifted up by 1 hex on the top.
+            var topY = -y - (x & 1);
+            
+            // Mirror bottom-right onto top-right.
+            arc_data[x][topY] = {
+                min: -max,
+                max: -min
+            };
+            
+            // Mirror bottom-right onto top-left;
+            arc_data[-x][topY] = {
+                min: (min > 0) ? (min - Math.PI) : (min + Math.PI),
+                max: (max > 0) ? (max - Math.PI) : (max + Math.PI)
+            };
+            
+            // Mirror top-left onto bottom-left:
+            arc_data[-x][y] = {
+                min: -arc_data[-x][topY].max,
+                max: -arc_data[-x][topY].min
+            };
         }
-    }, this);	
+    }, this); 	
 	
-	// generate other quadrant arc_data    
-	
-	for (var x in arc_data) { 
-		// skip x = 0
-		if(x != 0){
-		
-			arc_data[-x] = {};
-			
-			for (var y in arc_data[x]) {
-				// skip y = 0
-			//	if(y != 0){
-					var min = arc_data[x][y].min,
-						max = arc_data[x][y].max;
-				    
-					//generate top right
-					arc_data[x][-y] = {
-											min : -max,
-											max : -min
-										};				
-					//generate top left
-					arc_data[-x][-y] = {
-                                            min : (min > 0) ? (min - Math.PI) : (min + Math.PI),
-                                            max : (max > 0) ? (max - Math.PI) : (max + Math.PI)
-										};
-					//generate bottom left
-					arc_data[-x][y] = {
-											max : -arc_data[-x][-y].max,
-                                            min : -arc_data[-x][-y].min
-									    };			
-			//	}
-			}
-		}
-	}
 	
 	console.log(arc_data);
     /*
