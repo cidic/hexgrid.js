@@ -123,5 +123,5 @@ hex.prototype.get_min_max_hex_corners = function(hex1,hex2, drawLine){
     return result;
 }
     
-    
+    //xxx
     
