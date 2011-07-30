@@ -201,6 +201,7 @@ function hexgrid(args){
                 var rX = Math.floor(Math.random() * grid.mapsize_x), 
                     rY = Math.floor(Math.random() * grid.mapsize_y);
                 grid.hex(rX,rY).blocksLos = true;
+                grid.hex.setColor('blue');
             }
         }
  
@@ -253,7 +254,7 @@ function hexgrid(args){
     }, this); 	
 	
 	
-	console.log(arc_data);
+	//console.log(arc_data);
     /*
     for( var i in arc_data){
         

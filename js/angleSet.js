@@ -1,10 +1,11 @@
 // angleSet.js by Joseph Crowe <joseph.crowe@live.co.uk>
 // Requires jQuery.
-
-function angleSet (/*
+function angleSet (
+/*
     {min:min0, max:max0}, {min:min1, max:max1} ... | arrayOfIntervals |
     edge0, edge1, edge2, ... edgeN | arrayOfEdges
-*/) {
+*/
+) {
     // A set of angles composed of a finite number of segments which are either full or empty. The
     // angles in full segments are included in the set, and the angles in empty segments are not.
     // The segments are encoded as a series of distinct edges numbered 0 to N-1, where segment X

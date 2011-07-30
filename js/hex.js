@@ -67,6 +67,7 @@ hex.prototype.setColor = function(color){
         
     this.color = color;
 	$target.attr('class','hex '+color);
+    return this;
 }
 hex.prototype.get_min_max_hex_corners = function(hex1,hex2, drawLine){
     // returns the min and max radian of the corners of hex2 when hex1 is the origin
@@ -122,6 +123,110 @@ hex.prototype.get_min_max_hex_corners = function(hex1,hex2, drawLine){
 	
     return result;
 }
+hex.prototype.get_hex_loop = function(distance){
+    return get_hex_loop(this, distance);
+}
+
+function get_hex_loop(hex, distance) {
+    	// get array of hexes in loop around 'hex'
+        // consider memoizing this
+
+	var	distance = distance || 1,
+		origin_x = hex.x,
+		origin_y = hex.y,
+        _x = origin_x,
+        _y = origin_y - distance,
+		next = grid.hex(origin_x, origin_y - distance),
+        result = [];
+
+    s_hex  = function(x,y){ return {x : x, y : y + 1}};
+    ne_hex = function(x,y){ return {x : x +1, y : ((x&1) === 0)? y - 1 : y}};
+    nw_hex = function(x,y){ return {x : x - 1, y : ((x&1) === 0)? y - 1 : y}};
+    n_hex  = function(x,y){ return {x : x, y :  y - 1 }};
+    se_hex = function(x,y){ return {x : x + 1, y : ((x&1) === 0)? y : y + 1}};
+    sw_hex = function(x,y){ return {x : x - 1, y : ((x&1) === 0)? y : y + 1}};
+
+    var directions = [
+         se_hex
+        ,s_hex
+        ,sw_hex
+        ,nw_hex
+        ,n_hex
+        ,ne_hex
+    ];
+
+    for(var d = 0; d < 6; d++){
+        for(var i = 0; i < distance; i++){
+            result.push(next);
+            var next_coords = directions[d](_x,_y);
+
+            _x = next_coords.x;
+            _y = next_coords.y;
+
+            next = grid.hex(_x,_y);
+	    }
+    }
+	return result;
+}
+
+
+
+function UnitType(args){
+    var args = args || {};
+    /* example args
+    {
+        name : 'infantry',
+        displayName: 'Infantry',
+        movement : {
+            'default' : 3,
+            'forest' : 3,
+            'building' : 3
+        }
+    }
+    */
+    _.extend(this, args);
     
-    //xxx
+    
+}
+
+var unitTypes = {
+    'infantry' : new UnitType({
+        name : 'infantry',
+        displayName: 'Infantry',
+        movement : {
+            'default' : 3,
+            'forest' : 3,
+            'building' : 3
+        }
+    }),
+    'afv_light' : new UnitType({
+        name : 'afv_light',
+        displayName: 'Light Armored Fighting Vehicle',
+        movement: {
+            'default' : 6,
+            'forest' : 3,
+            'building' : -1
+        }
+    }),
+}
+function TerrainType(args) {
+    var args = args || {};
+    
+    this.name           = args.name;
+  
+}
+
+var terrainTypes ={
+    'default' : new TerrainType({
+        name : 'default'
+    }),
+    'forest' : new TerrainType({
+        name : 'forest'
+    })
+};
+
+
+console.log(unitTypes);
+
+
     

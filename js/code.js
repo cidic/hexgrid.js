@@ -3,54 +3,7 @@
 
 
 
-    function get_hex_loop(hex, distance) {
-		// get array of hexes in loop around 'hex'
-        // consider memoizing this
-
-		var	distance = distance || 1,
-			origin_x = hex.x,
-			origin_y = hex.y,
-            _x = origin_x,
-            _y = origin_y - distance,
-			next = grid.hex(origin_x, origin_y - distance),
-            result = [];
-
-        s_hex  = function(x,y){ return {x : x, y : y + 1}};
-        ne_hex = function(x,y){ return {x : x +1, y : ((x&1) === 0)? y - 1 : y}};
-        nw_hex = function(x,y){ return {x : x - 1, y : ((x&1) === 0)? y - 1 : y}};
-        n_hex  = function(x,y){ return {x : x, y :  y - 1 }};
-        se_hex = function(x,y){ return {x : x + 1, y : ((x&1) === 0)? y : y + 1}};
-        sw_hex = function(x,y){ return {x : x - 1, y : ((x&1) === 0)? y : y + 1}};
-
-       var directions = [
-             se_hex
-            ,s_hex
-            ,sw_hex
-            ,nw_hex
-            ,n_hex
-            ,ne_hex
-        ];
-
-        for(var d = 0; d < 6; d++){
-
-            for(var i = 0; i < distance; i++){
-                // if hex exists
-             //   if(next) {
-                    result.push(next);
-             //   }
-
-
-            var next_coords = directions[d](_x,_y);
-
-            _x = next_coords.x;
-            _y = next_coords.y;
-
-            next = grid.hex(_x,_y);
-		    }
-
-        }
-		return result;
-	}
+    
 
 
 
@@ -117,13 +70,13 @@
             hex_last_y_offset = hex_last.y - hex1.y - (hex1.x & hex_last_x_offset & 1);
            
             
-            
+            /*
             console.log('hex_first : '+hex_first.x+','+hex_first.y);
             console.log('hex_first_offset : '+hex_first_x_offset+','+hex_first_y_offset);
             
             console.log('hex_last : '+hex_last.x+','+hex_last.y);
             console.log('hex_last_offset : '+hex_last_x_offset+','+hex_last_y_offset);
-            
+            */
             var result =    {
 							min : grid.arc_data[hex_first_x_offset][hex_first_y_offset].min,
 							max : grid.arc_data[hex_last_x_offset][hex_last_y_offset].max
@@ -258,7 +211,8 @@
         
 		var origin_hex = grid.hex(10,10),
 			max_loop_radius = 100,
-			los_angleSet = new angleSet;
+			los_angleSet = new angleSet,
+            visible_hexes = [];
 
         origin_hex.setColor('yellow')
 
@@ -296,12 +250,18 @@
                 for(var i = loop_hexes.length; i--;) {
                     if(hex_inside_angleSet(origin_hex, loop_hexes[i], los_angleSet)){
                         if(loop_hexes[i].blocksLos === false) loop_hexes[i].setColor('white');
+                        
+                    }
+                    // add to visible list
+                    else {
+                       visible_hexes.push(loop_hexes[i]);
                     }
                 }
             }
 			hexes = []; // reset hexes
 
 		}
+        //console.log(visible_hexes);
 	}
 
     var width = 20, height = 20;
@@ -322,14 +282,29 @@
             })()
         });
         
-        console.log(grid);
 
 
-console.log('x');
+
 
 	$(function(){
-
-        los_tester();
+        grid.eachHex(function(x,y, hex){
+                	 
+			if(!!hex.blocksLos){ hex.setColor('blue'); }
+        });
+        
+        
+        var arr = [];
+        for (var x = grid.w0idth; x--;) for (var y = grid.height; y--;)
+        if (Math.random() < 0.08) arr.push({x:x, y:y});
+        return arr;
+        
+        
+        var _x = this.blockingHexes[i].x,
+                _y = this.blockingHexes[i].y;
+                this.hex(_x,_y).blocksLos = true;
+        
+        
+        //los_tester();
 
 	});
 
