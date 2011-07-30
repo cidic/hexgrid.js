@@ -218,3 +218,46 @@ function math_stuff(){
 });
 
 */
+
+
+    function turns(x0,y0,x1,y1,x2,y2) {
+        // deturmine if point(x2,y2) is LEFT, RIGHT, OR STRAIGHT (on top of) line (x0,y0)(x1,y1)
+	    cross = (x1-x0)*(y2-y0) - (x2-x0)*(y1-y0);
+	    return((cross > 0.0) ? 'LEFT' : ((cross === 0.0) ? 'STRAIGHT' : 'RIGHT'));
+	}
+
+	function hex_intersects_line(hex, x0, y0, x1, y1) {
+	    // deturmine if line(x0,y0)(x1,y1) croses hex
+		var side1 =turns(x0,y0,x1,y1,hex.corners[0].x,hex.corners[0].y);
+		if (side1=='STRAIGHT') return true;
+		for (i=1;i<6;i++) {
+			var j = turns(x0, y0, x1, y1, hex.corners[i].x, hex.corners[i].y);
+            // as soon as 2 points on opasite sides of the line are found, stop return true
+			if (j != side1) return true;
+		}
+		return false;
+	}
+
+	function line_to_hex_test(){
+		//finds hexes a line crosses
+		var hex = mapArray[4][5],
+			line_x1 = hex.center_coord[0],
+			line_y1 = hex.center_coord[1],
+			line_x2 = line_x1 + 150,
+			line_y2 = line_y1 + 130;
+
+		draw_line(line_x1,line_y1,line_x2,line_y2);
+
+		for (x=0; x  < mapsize_x; x++) {
+			for (y=0; y < mapsize_y; y++) {
+				var target_hex =  mapArray[x][y],
+					test = hex_intersects_line(target_hex, line_x1, line_y1, line_x2, line_y2);
+
+				if(test){
+					highlight_hex_obj(target_hex);
+				}
+             //   console.log(x+','+y);
+			//	console.log(test);
+			}
+		}
+	}

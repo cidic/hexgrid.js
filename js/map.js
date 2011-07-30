@@ -205,7 +205,17 @@ function hexgrid(args){
             }
         }
  
- 
+    hexgrid.prototype.getRandomHexes = function(frequency) {
+        var arr = [],
+            frequency = frequency || 0.08;
+            
+        this.eachHex(function(x,y,hex){
+             //   console.log(hex);
+                if (Math.random() < frequency) arr.push(hex);
+            });
+        
+        return arr;
+    }
  hexgrid.prototype.generate_arc_data = function(){
     // returns the min and max radian of the corners of hex2 when hex1 is the origin
     // may want to be able to process a collection of hexes to find min/max; turn hex1 into an array of hex objects and do a foreach loop

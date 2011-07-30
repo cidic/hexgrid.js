@@ -39,6 +39,9 @@
 		div.blue {
 			background: url("../images/hex_blue.png") top left no-repeat;
 	    }
+        div.forest {
+            background: url("../images/hex_forest.png") top left no-repeat;    
+        }
 		div.hex_tree {
 			position:relative;
 			background: url("../images/hex_tree.png") top left no-repeat;
