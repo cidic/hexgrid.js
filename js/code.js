@@ -30,17 +30,19 @@
         
         
         var arr = grid.getRandomHexes();
-        console.log('rnd');
-        console.log(arr);
         _.each(arr, function(hex){
         
             hex.terrain = 'forest';
+            hex.impassible = true;
             hex.setColor('forest');
         });
+        grid.hex(1,1).impassible = false;
+        grid.hex(1,1).setColor('green');
+        grid.hex(4,3).impassible = false;
+        grid.hex(4,3).setColor('green');
         
         
-        
-        
+        path(1, 1, 4, 3);
         //los_tester();
 
 	});
