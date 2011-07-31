@@ -97,7 +97,7 @@ function path(start_x, start_y, end_x, end_y) {
     			statelist[x][y] = 2;
 				openlist[selected_id]= false;
 				// Add connected nodes to the openlist
-        var adjacentHexes = grid.hex(node_x,node_y).get_adjacent;
+        var adjacentHexes = grid.hex(x,y).get_adjacent;
         
         _.each(adjacentHexes, function(hex){
             node_x = hex.x;
@@ -107,7 +107,7 @@ function path(start_x, start_y, end_x, end_y) {
             // Add connected nodes to the openlist
             
             
-            console.log(adjacentHexes);
+            //console.log(adjacentHexes);
              
             if (hex_accessible([node_x],[node_y])) {
             

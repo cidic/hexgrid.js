@@ -38,11 +38,11 @@
         });
         grid.hex(1,1).impassible = false;
         grid.hex(1,1).setColor('green');
-        grid.hex(4,3).impassible = false;
-        grid.hex(4,3).setColor('green');
+        grid.hex(16,16).impassible = false;
+        grid.hex(16,16).setColor('green');
         
         
-        path(1, 1, 4, 3);
+        path(1, 1, 16, 16);
         //los_tester();
 
 	});
