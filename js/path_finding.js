@@ -69,81 +69,77 @@ function path(start_x, start_y, end_x, end_y) {
 		
 
 // Find lowest F in openlist
-				for (var i in openlist) {
-					if(openlist[i] == true){
-						select_x = openlist_x[i]; 
-						select_y = openlist_y[i]; 
-						if(set_first == true) {
-							lowest_found = openlist_f[select_x][select_y];
-							set_first = false;
-						}
-						if (openlist_f[select_x][select_y] <= lowest_found) {
-							lowest_found = openlist_f[select_x][select_y];
-							x = openlist_x[i];
-							y = openlist_y[i];
-							selected_id = i;
-						}
-					}
+		for (var i in openlist) {
+			if(openlist[i] == true){
+				select_x = openlist_x[i]; 
+				select_y = openlist_y[i]; 
+				if(set_first == true) {
+					lowest_found = openlist_f[select_x][select_y];
+					set_first = false;
 				}
+				if (openlist_f[select_x][select_y] <= lowest_found) {
+					lowest_found = openlist_f[select_x][select_y];
+					x = openlist_x[i];
+					y = openlist_y[i];
+					selected_id = i;
+				}
+			}
+		}
 
 
-				if(set_first==true) {
-					// open_list is empty
-					alert('No possible route can be found.');
-					return false;
-				}
+		if(set_first==true) {
+			// open_list is empty
+			alert('No possible route can be found.');
+			return false;
+		}
         console.log('x');
             // add it lowest F as closed to the statelist and remove from openlist
     			statelist[x][y] = 2;
 				openlist[selected_id]= false;
 				// Add connected nodes to the openlist
-    var adjacentHexes = grid.hex(node_x,node_y).get_adjacent;
-  _.each(adjacentHexes, function(){
-    
-	    console.log('hex('+node_x+','+node_y+')');
-		
-		// Add connected nodes to the openlist
+        var adjacentHexes = grid.hex(node_x,node_y).get_adjacent;
         
-  
-        console.log(adjacentHexes);
-      
-		     
+        _.each(adjacentHexes, function(hex){
+            node_x = hex.x;
+            node_y = hex.y;
+            console.log('hex('+node_x+','+node_y+')');
+            
+            // Add connected nodes to the openlist
+            
+            
+            console.log(adjacentHexes);
              
-		  if (hex_accessible([node_x],[node_y])) {
-             
-
-
-
-
-			  if(statelist[node_x][node_y] == true) {
-			  	if(openlist_g[node_x][node_y] < openlist_g[x][y]) {
-			  		parent_x[x][y] = node_x;
-					  parent_y[x][y] = node_y;
-					  openlist_g[x][y] = openlist_g[x][y] + 10;
-					  openlist_f[x][y] = openlist_g[x][y] + openlist_h[x][y];
-				  }
-			  } else if (statelist[node_x][node_y] == 2) {
-				  // its on closed list do nothing.
-			  } else {
-				  counter++;
-				  // add to open list
-				  openlist[counter] = true;
-				  openlist_x[counter] = node_x;
-				  openlist_y[counter] = node_y;
-				  statelist[node_x][node_y] = true;
-				  // Set parent
-				  parent_x[node_x][node_y] = x;
-				  parent_y[node_x][node_y] = y;
-				  // update H , G and F
-				  var ydist = end_y - node_y;
-				  if ( ydist < 0 ) ydist = ydist*-1;
-				  var xdist = end_x - node_x;
-				  if ( xdist < 0 ) xdist = xdist*-1;		
-				  openlist_h[node_x][node_y] = hex_distance(node_x,node_y,end_x,end_y) * 10;
-				  openlist_g[node_x][node_y] = openlist_g[x][y] + 10;
-				  openlist_f[node_x][node_y] = openlist_g[node_x][node_y] + openlist_h[node_x][node_y];
-				}
-		  }
+            if (hex_accessible([node_x],[node_y])) {
+            
+              if(statelist[node_x][node_y] == true) {
+              	if(openlist_g[node_x][node_y] < openlist_g[x][y]) {
+              		parent_x[x][y] = node_x;
+            		  parent_y[x][y] = node_y;
+            		  openlist_g[x][y] = openlist_g[x][y] + 10;
+            		  openlist_f[x][y] = openlist_g[x][y] + openlist_h[x][y];
+            	  }
+              } else if (statelist[node_x][node_y] == 2) {
+            	  // its on closed list do nothing.
+              } else {
+            	  counter++;
+            	  // add to open list
+            	  openlist[counter] = true;
+            	  openlist_x[counter] = node_x;
+            	  openlist_y[counter] = node_y;
+            	  statelist[node_x][node_y] = true;
+            	  // Set parent
+            	  parent_x[node_x][node_y] = x;
+            	  parent_y[node_x][node_y] = y;
+            	  // update H , G and F
+            	  var ydist = end_y - node_y;
+            	  if ( ydist < 0 ) ydist = ydist*-1;
+            	  var xdist = end_x - node_x;
+            	  if ( xdist < 0 ) xdist = xdist*-1;		
+            	  openlist_h[node_x][node_y] = hex_distance(node_x,node_y,end_x,end_y) * 10;
+            	  openlist_g[node_x][node_y] = openlist_g[x][y] + 10;
+            	  openlist_f[node_x][node_y] = openlist_g[node_x][node_y] + openlist_h[node_x][node_y];
+            	}
+            }
 		});
 	}
 
