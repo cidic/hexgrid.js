@@ -43,7 +43,7 @@
         
         
         path(1, 1, 16, 16);
-        //los_tester();
+        los_tester();
 
 	});
 
